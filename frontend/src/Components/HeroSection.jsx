@@ -1,0 +1,22 @@
+import React from 'react'
+import heroImg from './hero.png'
+function HeroSection() {
+  return (
+    <div className='p-5 w-full flex md:flex-row-reverse  flex-col items-center justify-center'>
+        <div className='p-4 md:w-1/2'>
+            
+            <img src={heroImg}  alt="IMG" className='rounded-xl'/>
+        </div>
+        <div className='p-5 md:text-left text-center '>
+            <div className='text-3xl text-orange-200 lg:text-5xl'>Hello,</div>
+            <div className='text-3xl font-bold lg:text-6xl'>Welcome to प्रश्णोत्तर,</div>
+             <div className='text-pink-200 lg:text-xl'>A Platform dedicated to Teachers to evaluate their Students</div>
+             <br /> 
+             <button className='bg-sky-900 p-2 px-3 rounded-md shadow-2xl shadow-pink-400 text-xl'>Register Now</button>
+        </div>
+        
+    </div>
+  )
+}
+
+export default HeroSection
