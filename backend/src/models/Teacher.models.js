@@ -51,7 +51,8 @@ teacherSchema.methods.generateAccessToken =async function(){
             name:this.name,
             username:this.username,
             email:this.email,
-            role:this.role
+            experience:this.experience,
+            field:this.field
             
         }, 
         process.env.JSON_ACCESS_TOKEN,
