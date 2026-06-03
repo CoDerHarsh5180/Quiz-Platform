@@ -16,7 +16,9 @@ const sectionSchema = new mongoose.Schema({
     numOfQues:{type:Number, required:true},
     typeOfQues:{type:String, required:true, enum:["MCQ", "NUMERICAL","MSQ", "TRUE/FALSE", "DESCRIPTIVE"]}, 
     questions:[{
-        id:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"Question"
     }] 
 })
+
+export const Section = mongoose.model("Section", sectionSchema)

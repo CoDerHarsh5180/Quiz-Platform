@@ -28,6 +28,9 @@ const teacherSchema = new Schema({
     field:{
         type:String,
         enum:["JEE", "NEET", "OLYMPIAD", "SCHOOL", "GOVT-EXAMS PREP"]
+    },
+    refreshToken:{
+        type:String
     }
 }, {timestamps:true})
 

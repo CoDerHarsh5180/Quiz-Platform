@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const questionSchema = new mongoose.Schema({
     creator: {
         type: Schema.Types.ObjectId,
-        ref: 'Teacher',
+        ref: "Teacher",
         required: true
     },
     index: {
@@ -19,7 +19,7 @@ const questionSchema = new mongoose.Schema({
     },
     section: {
         type: Schema.Types.ObjectId,
-        ref: 'Section',
+        ref: "Section",
         required: true
     },
     options: [{

@@ -25,7 +25,7 @@ const structureSchema = new mongoose.Schema({
     }],
     noOfSec:{type:Number, required:true}, 
     sections:[{
-        sectionId:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"Section"
     }]
 },{timestamps:true})

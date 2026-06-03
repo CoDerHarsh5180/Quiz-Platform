@@ -18,4 +18,7 @@ app.use(cookieParser())
 export {app}
 
 import router from "./router/userRouter.routes.js"
+import testRouter from "./router/createQuiz.routes.js"
+
+app.use("/api/v1/test/", testRouter)
 app.use("/api/v1/", router)
