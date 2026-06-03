@@ -7,6 +7,7 @@ export const verifyJWT = asyncHandler(async(req,_, next)=>{
         console.log("Verifying JWT")
        
         const token = req.cookies?.accessToken || req.header("Authorization").replace("Bearer ","")
+        console.log("Token:", token)
         if(!token){
             console.log("Token Not Found")
             throw new ApiError(404, "Unauthorized Request")

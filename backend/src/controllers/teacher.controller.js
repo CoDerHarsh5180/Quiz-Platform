@@ -198,5 +198,40 @@ const refreshAccessToken = asyncHandler(async(req, res)=>{
 })  
 
 
+const getProfile = asyncHandler(async(req, res)=>{
+    if(!req.cookies.accessToken){
+        throw new ApiError(401, "Unauthorized Request")
+    }
+    if(!req.user){
+        throw new ApiError(401, "Unauthorized Request")
+    }
+    const user = await Teacher.findById(req.user._id)
+    if(!user){
+        throw new ApiError(404, "User Not Found")
+    }
+    res.status(200).json(
+        new ApiResponse(200, user, "User Profile Fetched Successfully")
+    )
+})
 
-export {userRegister, verifyUser, Login, changePassword, refreshAccessToken}
+const logout = asyncHandler(async(req, res)=>{
+    const user = await Teacher.findById(req.user._id)
+    if(!user){
+        throw new ApiError(404, "User Not Found")
+    }
+    user.refreshToken = null
+    await user.save({validateBeforeSave:false})
+
+    const option = {
+        httpOnly:true,
+        secure:true
+    }
+    res.status(200)
+    .clearCookie("refreshToken", option)
+    .clearCookie("accessToken", option)
+    .json(
+        new ApiResponse(200, "Logged Out Successfully")
+    )
+})
+
+export {userRegister, verifyUser, Login, changePassword, refreshAccessToken, getProfile, logout}

@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import HomePage from './pages/HomePage'
 import FeaturesPart from './Components/FeaturesPart'
+import {TeacherProvider} from './context/teacherContext.jsx'
+import { useAuth } from './context/teacherContext.jsx'
+import {Loader2} from 'lucide-react'
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div>
-      <HomePage />
-      <FeaturesPart />
-    </div>
+    
+   
+      <div>
+        <HomePage />
+        <FeaturesPart />
+      </div>
+
   )
 }
 

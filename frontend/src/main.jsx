@@ -2,9 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-
+import {TeacherProvider} from './context/teacherContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <TeacherProvider>
+      <App />
+    </TeacherProvider>
   </StrictMode>,
 )
