@@ -26,6 +26,8 @@ const createStructure = asyncHandler(async (req, res) => {
         subjects,
         noOfSec
     })
+    creator.tests.push(structure._id)
+    await creator.save()
     res.status(201).json(new ApiResponse(201, structure, "Structure created successfully"))
 })
 

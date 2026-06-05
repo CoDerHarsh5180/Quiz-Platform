@@ -3,16 +3,17 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { loginUser } from "../Api/apirequests";
 import { X } from "lucide-react";
+import { useAuth } from "../context/teacherContext";
 const LoginPage = ({cancel}) => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     // const navigate = useNavigate()
-    
+    const {loginForm, setLoginForm, setRegisterForm} = useAuth()
 
   return (
     <div className="flex items-center justify-center  ">
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8 relative">
-        <span className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700" onClick={cancel}>
+        <span className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700" onClick={()=>{setLoginForm(false)}}>
           <X />
         </span>
         <h2 className="text-2xl font-semibold text-center mb-2">Welcome back</h2>
@@ -60,10 +61,11 @@ const LoginPage = ({cancel}) => {
 
 
         <p className="mt-6 text-center text-gray-600">
-          Don’t have an account?{" "}
-          <a href="/signup" className="text-violet-500 hover:underline">
-            Sign up
-          </a>
+          Don't have an account?{" "}
+          <button onClick={()=>{
+            setLoginForm(false)
+            setRegisterForm(true)
+          }}>Register Now</button>
         </p>
       </div>
     </div>

@@ -72,13 +72,14 @@ const verifyUser = asyncHandler(async(req, res)=>{
     const user1 =await Otp.find({   
         email:email
     })
+    console.log(req.body)
     if(!email){
         throw new ApiError(501, "User not found")
     }
     console.log(password)
     console.log((otp))
-    console.log((user1[0].otp))
-    if((user1[0].otp).trim() === otp.trim()){
+    console.log((user1[user1.length-1].otp))
+    if((user1[user1.length-1].otp).trim() === otp.trim()){
         console.log("Otp Verified")
         const user = await Teacher.create({
             name:name,
@@ -88,7 +89,7 @@ const verifyUser = asyncHandler(async(req, res)=>{
             experience:experience,
             field:field
         })
-        
+        console.log(user)
         res.status(200).json(
             new ApiResponse(200, user, "Registered Successfully")
         )

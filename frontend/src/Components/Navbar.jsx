@@ -5,10 +5,14 @@ import { loginUser } from '../Api/apirequests'
 import LoginPage from '../forms/login'
 import { useAuth } from '../context/teacherContext.jsx'
 import {logoutUser} from '../Api/apirequests'
+import {registerUser} from '../Api/apirequests'
+import RegisterPage from '../forms/Register'
+import { useNavigate } from 'react-router'
 function Navbar() {
+  const navigate = useNavigate()
   const {user, loading} = useAuth();
   const [menuOpen, setMenuOpen] = useState(false)
-  const [loginForm, setLoginForm] = useState(false)
+  const {loginForm, setLoginForm, registerForm, setRegisterForm} = useAuth()
   const handleLoginClick = ()=>{
     setLoginForm(true)
   }
@@ -19,13 +23,13 @@ function Navbar() {
     <div className='flex justify-between p-5 lg:p-10 items-center bg-black/20 z-40'>
         <div className='text-4xl font-bold p-2'>प्रश्णोत्तर</div>
         <div className='text-white hidden gap-2 p-5 md:flex'>
-            <button>Home</button>
+            <button onClick={()=>{navigate('/')}}>Home</button>
             <div>|</div>
             <button>Create new test</button>
             <div>|</div>
-            <button>My Tests</button>
+            <button onClick={()=>{navigate('mytests')}}>My Tests</button>
             <div>|</div>
-            {!user && <button>Register</button>}
+            {!user && <button onClick={() => setRegisterForm(true)}>Register</button>}
             {!loading && user && <div>{user.data.email}</div>}
             <div>|</div>
               {!user &&
@@ -43,16 +47,14 @@ function Navbar() {
             <button>My Tests</button>
             <hr />
             {user && <div className='text-center'>{user.data.email}</div>}
-            {!user &&<button>Register</button>}
+            {!user &&<button onClick={()=>setRegisterForm(true)}>Register</button>}
             <hr />
             {!user &&<button onClick={handleLoginClick}>Login</button>}
             {user&& <button onClick={logoutUser}>Logout</button>}
           </div>}
 
 
-          {loginForm && <div className='fixed inset-0 w-full h-full bg-black/50 flex items-center justify-center z-50'>
-            <LoginPage cancel={cancelLogin} />
-          </div>}
+          
     </div>
     
   )

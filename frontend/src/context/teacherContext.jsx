@@ -7,6 +7,9 @@ export const TeacherProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+    const [loginForm, setLoginForm] = useState(false)
+    const [registerForm, setRegisterForm] = useState(false)
     useEffect(() => {
         showData().then((data) => {
             setUser(data);
@@ -18,7 +21,7 @@ export const TeacherProvider = ({ children }) => {
     }, []);
 
     return (
-        <TeacherContext.Provider value={{ user, loading }}>
+        <TeacherContext.Provider value={{ user, loading , loginForm, setLoginForm, registerForm, setRegisterForm}}>
             {children}
         </TeacherContext.Provider>
     );

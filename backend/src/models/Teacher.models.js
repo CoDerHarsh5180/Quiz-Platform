@@ -31,7 +31,13 @@ const teacherSchema = new Schema({
     },
     refreshToken:{
         type:String
-    }
+    },
+    tests:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Structure"
+        }
+    ]
 }, {timestamps:true})
 
 
