@@ -1,11 +1,14 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+
+
 const API_BASE_URL = 'http://localhost:3000/api/v1'; 
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 5000,
+  timeout: 10000,
 });
+
+
 
 
 
@@ -65,5 +68,42 @@ const logoutUser = async()=>{
     }
 }
 
+const createStructure = async(name, totalMarks,timeDuration, noOfSec, noOfSub, subjects)=>{
+    try{
+        const res = await axiosInstance.post('/test/createStructure', { name, totalMarks, timeDuration, noOfSec, noOfSub, subjects}, {withCredentials:true})
+        console.log(res.data);
+        return res.data;
+    }
+    catch(e){
+        console.log(e);
+    }
+    
+}
+
+const getStructure = async(testId)=>{
+    try{
+        const res = await axiosInstance.post('/test/getStructure',{testId}, {withCredentials:true})
+        console.log(res.data);
+        return res.data;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+
+const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instructions, numOfQues, typeOfQues)=>{
+    try{
+        const res = await axiosInstance.post('/test/createSection', {testId, plusMarks, minusMarks, instructions, numOfQues, typeOfQues, UserSection}, {withCredentials:true})
+        console.log(res.data);
+        return res.data;
+    }
+    catch(e){
+        throw new Error('Failed to create')
+    }    
+
+}
+
+
 export default axiosInstance;
-export {loginUser, showData, logoutUser, registerUser, verifyOTP};
+export {loginUser, showData, logoutUser, registerUser, verifyOTP, createStructure, getStructure, EditTheSection};

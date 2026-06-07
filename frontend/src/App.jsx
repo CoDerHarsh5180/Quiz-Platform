@@ -8,11 +8,13 @@ import { Routes, Route } from 'react-router'
 import MyTests from './pages/MyTests'
 import LoginPage from './forms/login.jsx'
 import RegisterPage from './forms/Register.jsx'
+import CreateTest from './forms/CreateTest.jsx'
+import { TestProvider } from './context/testContext.jsx'
 function App() {
-  const {loginForm, setLoginForm, registerForm, setRegisterForm} = useAuth()
+  const {loginForm, setLoginForm, registerForm, setRegisterForm, createTestForm, setCreateTestForm} = useAuth()
   return (
     
-
+    <TestProvider>
       <div>
         <Routes>
           <Route index path="/" element={<HomePage />}></Route>
@@ -24,9 +26,12 @@ function App() {
           {registerForm && <div className='fixed inset-0 w-full h-screen overflow-scroll bg-black/50 flex items-center justify-center z-50'>
             <RegisterPage />
           </div>}
+            {createTestForm && <div className='fixed inset-0 w-full h-screen bg-black/50 flex items-center justify-center z-50'>
+              <CreateTest />
+            </div>}
         
       </div>
-
+    </TestProvider>
   )
 }
 

@@ -12,7 +12,7 @@ function Navbar() {
   const navigate = useNavigate()
   const {user, loading} = useAuth();
   const [menuOpen, setMenuOpen] = useState(false)
-  const {loginForm, setLoginForm, registerForm, setRegisterForm} = useAuth()
+  const {loginForm, setLoginForm, registerForm, setRegisterForm, createTestForm, setCreateTestForm} = useAuth()
   const handleLoginClick = ()=>{
     setLoginForm(true)
   }
@@ -20,12 +20,12 @@ function Navbar() {
     setLoginForm(false)
   }
   return (
-    <div className='flex justify-between p-5 lg:p-10 items-center bg-black/20 z-40'>
+    <div className='flex justify-between p-5 lg:p-10 items-center bg-black/20 z-40 w-full'>
         <div className='text-4xl font-bold p-2'>प्रश्णोत्तर</div>
         <div className='text-white hidden gap-2 p-5 md:flex'>
             <button onClick={()=>{navigate('/')}}>Home</button>
             <div>|</div>
-            <button>Create new test</button>
+            <button onClick={()=>setCreateTestForm(true)}>Create new test</button>
             <div>|</div>
             <button onClick={()=>{navigate('mytests')}}>My Tests</button>
             <div>|</div>
@@ -42,7 +42,7 @@ function Navbar() {
         
             <button>Home</button>
             <hr />
-            <button>Create New Test</button>
+            <button onClick={()=>setCreateTestForm(true)}>Create New Test</button>
             <hr />
             <button>My Tests</button>
             <hr />

@@ -16,9 +16,12 @@ const createStructure = asyncHandler(async (req, res) => {
         console.log("Teacher not found")
         throw new ApiError(404, "Teacher not found")
     }
+    console.log(name, totalMarks, timeDuration, noOfSub, subjects, noOfSec)
     console.log("Creator Detected")
+    console.log(creator)
+    console.log(req.body)
     const structure = await Structure.create({
-        creator:creator._id,
+        creator:String(creator._id),
         name,
         totalMarks,
         timeDuration,
@@ -26,6 +29,7 @@ const createStructure = asyncHandler(async (req, res) => {
         subjects,
         noOfSec
     })
+    console.log(structure)
     creator.tests.push(structure._id)
     await creator.save()
     res.status(201).json(new ApiResponse(201, structure, "Structure created successfully"))
@@ -34,27 +38,71 @@ const createStructure = asyncHandler(async (req, res) => {
 
 const sectionCreate = asyncHandler(async(req, res)=>{
     console.log("Creating Section")
-    const {testId, plusMarks, minusMarks, instructions, numOfQues, typeOfQues} = req.body
+    const {testId, plusMarks, minusMarks, instructions, numOfQues, typeOfQues, UserSection} = req.body
+    console.log(req.body)
     const test = await Structure.findById(testId)
     if(!test){
         console.log("Test not found")
         throw new ApiError(404, "Test not found")
     }
-    const length = test.sections.length
-    console.log(length)
-    const section = await Section.create({
-        testId,
-        secName: String.fromCharCode(65 + length), 
-        plusMarks,
-        minusMarks,
-        instructions,
-        numOfQues,
-        typeOfQues
-    })
-    console.log("Section Created")
-    test.sections.push(section._id)
-    await test.save()
-    res.status(201).json(new ApiResponse(201, section, "Section created successfully"))
+    if(!UserSection){
+        const length = test.sections.length
+        if(length>=test.noOfSec){
+            console.log("This Section is Not Defined in the Structure")
+            throw new ApiError(404, "This Section is Not Defined in the Structure")
+        }
+        console.log(length)
+        const section = await Section.create({
+            testId,
+            secName: String.fromCharCode(65 + length), 
+            plusMarks,
+            minusMarks,
+            instructions,
+            numOfQues,
+            typeOfQues
+        })
+
+        console.log("Section Created")
+        test.sections.push(section._id)
+        console.log(test.sections)
+        await test.save()
+        res.status(201).json(new ApiResponse(201, section, "Section created successfully"))
+    }
+    else{
+        const section = await Section.find({secName:UserSection}) 
+        if(!section){
+            if(test.sections.length<noOfSec){
+                const length = test.sections.length
+                console.log(length)
+                const section1 = await Section.create({
+                    testId,
+                    secName: String.fromCharCode(65 + length), 
+                    plusMarks,
+                    minusMarks,
+                    instructions,
+                    numOfQues,
+                    typeOfQues
+                })
+                console.log("Section Created")
+                test.sections.push(section._id)
+                await test.save()
+                res.status(201).json(new ApiResponse(201, section, "Section created successfully"))
+            }
+            else{
+                console.log("This Section is Not Defined in the Structure")
+                throw ApiError(404, "This Section is Not Defined in the Structure")
+            }
+        }
+        section[0].plusMarks=plusMarks
+        section[0].minusMarks=minusMarks
+        section[0].instructions=instructions
+        section[0].numOfQues=numOfQues
+        section[0].typeOfQues=typeOfQues
+        await section[0].save()
+        res.status(200).json(new ApiResponse(200, section, "Section updated successfully"))
+
+    }
+    
 })
 
 
@@ -90,4 +138,19 @@ const createQuestion = asyncHandler(async(req, res)=>{
     res.status(201).json(new ApiResponse(201, question, "Question created successfully"))
 })
 
-export {createStructure, sectionCreate as createSection, createQuestion}
+
+
+const getStructure = asyncHandler(async(req, res)=>{
+    const {testId} = req.body
+    console.log(req.body)
+    const structure = await Structure.findById(String(testId))
+    if(!structure){
+        console.log("Structure not found")
+        throw new ApiError(404, "Structure not found")
+    }
+    res.status(200).json(new ApiResponse(200, structure, "Structure fetched successfully"))
+})
+
+
+
+export {createStructure, sectionCreate as createSection, createQuestion, getStructure}

@@ -1,8 +1,14 @@
 import React from 'react'
 import {useAuth} from '../context/teacherContext.jsx'
 import Navbar from '../Components/Navbar.jsx'
+import { useTest } from '../context/testContext.jsx'
+import TestItem from '../Components/TestItem.jsx'
+import EditSection from '../forms/EditSection.jsx'
 function MyTests() {
-    const {user, loading, setLoginForm} = useAuth()
+    const {testArray, loading1} = useTest()
+   
+    if(!loading1) console.log(testArray)
+    const {user, loading, setLoginForm, setCreateTestForm} = useAuth()
     if(!user){
         return(
             <div className='bg-gray-900 text-white'>
@@ -19,7 +25,7 @@ function MyTests() {
             
         )
     }
-    if(!user.tests){
+    if(!user.data.tests){
         return(
             <div className='bg-gray-900 text-white'>
                 <Navbar />
@@ -28,7 +34,7 @@ function MyTests() {
                     <h3>Create your first test now</h3>
                     <br />
                     <button 
-                        onClick={()=>{}}
+                        onClick={()=>{setCreateTestForm(true)}}
                         className='p-2 bg-orange-200 text-black font-bold rounded'
                     >Create New Test</button>
                 </div>
@@ -36,12 +42,27 @@ function MyTests() {
         )
     }
 
-    const [tests, setTests] = useState('')
-    setTests(user.tests)
+    
   return (
-    <div>
+    
+    <div className='bg-gray-900 text-white '>
+       <Navbar />
+       <div className='px-10 py-4 space-y-4  bg-gray-800 rounded min-h-screen w-full flex flex-col items-center'>
+        {!loading1 &&
+           testArray.map((t)=>{
+            console.log(t)
+                return( 
+                    <div className=' lg:w-2/3 md:w-4/5 w-full'>
+                        <TestItem id={t.data._id} name={t.data.name} totalMarks={t.data.totalMarks} timeDuration={t.data.timeDuration} noOfSec={t.data.noOfSec} isSection={(t.data.sections.length>0)}/>
+                    </div>
+            )
+               
+           })
+        }
+        </div>
 
     </div>
+    
   )
 }
 
