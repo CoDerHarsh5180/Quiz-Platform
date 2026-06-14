@@ -5,7 +5,7 @@ import { Teacher } from '../models/Teacher.models.js'
 import { Structure } from '../models/structure.models.js'
 import { Section } from '../models/section.models.js'
 import { Question } from '../models/questions.models.js'
-import {uploadOnCloudinary} from '../utils/cloudinary.js'
+import {uploadOnCloudinary, unlinkFile} from '../utils/cloudinary.js'
 import { generateQues } from '../utils/AIQuestionDesigner.js'
 
 const createStructure = asyncHandler(async (req, res) => {
@@ -153,6 +153,9 @@ const createQuestion = asyncHandler(async(req, res)=>{
         subject,
         image: img?.url
     })
+    unlinkFile(image)
+    section.questions.push(question._id)
+    await section.save()
     res.status(201).json(new ApiResponse(201, question, "Question created successfully"))
 })
 
@@ -220,6 +223,18 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
     const question = await Question.create(ques)
     section[0].questions.push(question._id)
     await section[0].save()
+    try{
+        if(image) await unlinkFile(image)
+    }
+    catch(e){
+        console.log("Image not found")
+    }
+    try{
+        if(refImg)await unlinkFile(refImg)
+    }catch(e){
+        console.log("Image not found")
+    }
+    
     res.status(200).json(new ApiResponse(200, question, "Ques Fetched SuccessFully"))
 })
 
