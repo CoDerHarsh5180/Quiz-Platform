@@ -10,7 +10,13 @@ export const TestProvider = ({children})=>{
     const [loading1, setLoading] = useState(true)
     const tests = user?.tests
     const [sectionEditing, setSectionEditing] = useState(false)
-    
+    const [TestId, setTestId]= useState('')
+    const [sec, setSec] = useState(0)
+    const openSectionEditor = (id, sec)=>{
+        setSectionEditing(true)
+        setTestId(id)
+        setSec(sec)
+    }
     useEffect(()=>{
         if(user){
             console.log(user.data.tests)
@@ -26,7 +32,7 @@ export const TestProvider = ({children})=>{
     }, [user])
 
     return(
-        <TestContext.Provider value={{testArray, loading1, sectionEditing, setSectionEditing}}>
+        <TestContext.Provider value={{testArray, loading1, sectionEditing, setSectionEditing, openSectionEditor, TestId, sec}}>
             {children}
         </TestContext.Provider>
     )

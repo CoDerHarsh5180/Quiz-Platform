@@ -1,9 +1,10 @@
 import React from 'react'
 import { useTest } from '../context/testContext';
-import { useState } from 'react';
-import { EditTheSection } from '../Api/apirequests';
+import { useState, useEffect } from 'react';
+import { EditTheSection, getSection } from '../Api/apirequests';
 import {X} from 'lucide-react'
 function EditSection({id, noOfSec}) {
+  console.log(noOfSec)
     const {testArray, loading1, setSectionEditing} = useTest()
     const [section, setSection] = useState("")
     const [positiveMarks, setPositiveMarks] = useState(0)
@@ -11,6 +12,21 @@ function EditSection({id, noOfSec}) {
     const [instructions, setInstructions] = useState("")
     const [noOfQues, setNoOfQues]=useState(0)
     const [typeOfQues, setTypeOfQues] = useState('MCQ')
+
+    useEffect(()=>{
+      getSection(section)
+      .then((data)=>{
+        if(data.data[0] && String(data.data[0].testId)===id){
+          setInstructions(data.data[0].instructions)
+          setPositiveMarks(data.data[0].plusMarks)
+          setNegativeMarks(data.data[0].minusMarks)
+          setNoOfQues(data.data[0].numOfQues)
+          setTypeOfQues(data.data[0].typeOfQues)
+        }
+        console.log(data.data)
+      })
+    }, [section])
+
   return (
     <div>
         <div className="flex items-center justify-center  ">

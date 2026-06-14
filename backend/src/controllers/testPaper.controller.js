@@ -6,7 +6,7 @@ import { Structure } from '../models/structure.models.js'
 import { Section } from '../models/section.models.js'
 import { Question } from '../models/questions.models.js'
 import {uploadOnCloudinary} from '../utils/cloudinary.js'
-
+import { generateQues } from '../utils/AIQuestionDesigner.js'
 
 const createStructure = asyncHandler(async (req, res) => {
     console.log("Creating Structure")
@@ -106,9 +106,22 @@ const sectionCreate = asyncHandler(async(req, res)=>{
 })
 
 
+const getSection = asyncHandler(async(req, res)=>{
+    const {secName} = req.body
+    const section = await Section.find({secName:secName})
+    if(!section){
+        res.status(200).json(
+            new ApiResponse(200, {}, "No Section of this name present")
+        )
+    }
+    else {
+        res.status(200).json(new ApiResponse(200, section, "Section Fetched Successfully" ))
+    }
+})
+
 const createQuestion = asyncHandler(async(req, res)=>{
     console.log("Creating Question")
-    const { text, sectionId, options, correctAnswer, subject} = req.body
+    const { text, sectionName, options, correctAnswer, subject, testId} = req.body
     const creator = await Teacher.findById(req.user._id)
     console.log("Creator Detected")
     if(!creator){
@@ -120,7 +133,12 @@ const createQuestion = asyncHandler(async(req, res)=>{
     console.log("Image Path: ", image)
     let img;
     if(image) img = await uploadOnCloudinary(image)
-    const section = await Section.findById(sectionId)
+    const section = await Section.find({
+        $and:[
+            {testId:testId},
+            {secName:sectionName}
+        ]
+    })
     if(!section){
         console.log("Section not found")
         throw new ApiError(404, "Section not found")
@@ -129,7 +147,7 @@ const createQuestion = asyncHandler(async(req, res)=>{
         creator: creator._id,
         index: section.questions.length + 1,
         text,
-        section: sectionId,
+        section: section._id,
         options,
         correctAnswer,
         subject,
@@ -152,5 +170,58 @@ const getStructure = asyncHandler(async(req, res)=>{
 })
 
 
+const generateQuesImg = asyncHandler(async(req, res)=>{
+    console.log(req.body)
+    const {subject, sectionName, testId} = req.body
+    const user = await Teacher.findById(req.user._id)
+    if(!user){
+        console.log("User not found")
+        throw new ApiError(404, "User Not Found")
+    }
+    console.log(user)
+    const section = await Section.find({
+        $and:[
+            {testId:testId},
+            {secName:sectionName}
+        ]
+    })
+    if(!section){
+        console.log("Section not found")
+        throw new ApiError(404, "Section Not Found")
+    }
+    console.log(section[0])
+    const type = section.typeOfQues
+    const image = req.files?.prompt[0]?.path
+    console.log("Image Path: ", image)
+    let img;
+    
+    
+    const refImg = req.files?.image[0]?.path
+    console.log(refImg)
+    let ref1;
+    if(refImg) ref1 = await uploadOnCloudinary(refImg) 
+        console.log("Done-1")
+    if(image) img = await uploadOnCloudinary(image)   
+    console.log("Done-2")
+    const response = await generateQues(ref1.url, type)
+    console.log(response)
+    const ques = {
+        creator:user._id,
+        index: section[0].questions.length + 1,
+        section:section[0]._id,
+        text:response.question,
+        subject,
+        image:img?.url,
+        options:response.options,
+        correctAnswer:response.correctAnswer
 
-export {createStructure, sectionCreate as createSection, createQuestion, getStructure}
+    }
+    console.log(ques)
+    const question = await Question.create(ques)
+    section[0].questions.push(question._id)
+    await section[0].save()
+    res.status(200).json(new ApiResponse(200, question, "Ques Fetched SuccessFully"))
+})
+
+
+export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection}

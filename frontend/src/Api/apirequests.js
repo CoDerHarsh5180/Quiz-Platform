@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {toast} from 'react-hot-toast';
 
 const API_BASE_URL = 'http://localhost:3000/api/v1'; 
 
@@ -37,6 +37,7 @@ const loginUser = async(identifier, password)=>{
         const response = await axiosInstance.post('/login', {username: identifier, email: identifier, password}, {withCredentials:true});
         console.log(response.data);
         window.location.reload();
+        toast.success("Logged In Successfully")
         return response.data;
     }catch(e){
         throw new Error('Failed to login');
@@ -62,6 +63,7 @@ const logoutUser = async()=>{
         const response = await axiosInstance.post('/logout', {}, {withCredentials:true});
         window.location.reload();
         console.log(response.data);
+        toast.success("Logged Out Successfully")
         return response.data;
     }catch(e){
         throw new Error('Failed to logout');
@@ -72,6 +74,7 @@ const createStructure = async(name, totalMarks,timeDuration, noOfSec, noOfSub, s
     try{
         const res = await axiosInstance.post('/test/createStructure', { name, totalMarks, timeDuration, noOfSec, noOfSub, subjects}, {withCredentials:true})
         console.log(res.data);
+        toast.success("Structure Created Successfully")
         return res.data;
     }
     catch(e){
@@ -96,6 +99,12 @@ const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instruct
     try{
         const res = await axiosInstance.post('/test/createSection', {testId, plusMarks, minusMarks, instructions, numOfQues, typeOfQues, UserSection}, {withCredentials:true})
         console.log(res.data);
+        if(UserSection){
+            toast.success("Section Edited Successfully")
+        }
+        else{
+            toast.success("Section Added Successfully")
+        }
         return res.data;
     }
     catch(e){
@@ -104,6 +113,15 @@ const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instruct
 
 }
 
+const getSection = async(secName)=>{
+    try{
+        const res = await axiosInstance.post('/test/getSection', {secName}, {withCredentials:true})
+        return res.data
+    }
+    catch(e){
+        throw new Error(501, e)
+    }
+}
 
 export default axiosInstance;
-export {loginUser, showData, logoutUser, registerUser, verifyOTP, createStructure, getStructure, EditTheSection};
+export {loginUser, showData, logoutUser, registerUser, verifyOTP, createStructure, getStructure, EditTheSection, getSection};

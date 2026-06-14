@@ -24,7 +24,7 @@ const questionSchema = new mongoose.Schema({
     },
     options: [{
         type: String,
-        required: true
+        default:""
     }],
     correctAnswer: {
         type: String,

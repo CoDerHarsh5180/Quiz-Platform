@@ -3,7 +3,7 @@ import { useTest } from '../context/testContext'
 import EditSection from '../forms/EditSection'
 
 function TestItem({name, totalMarks, timeDuration, isSection, createdBy, noOfSec, id}) {
-  const {setSectionEditing, sectionEditing} = useTest()
+  const {setSectionEditing, sectionEditing, openSectionEditor, TestId, sec} = useTest()
   return (
     <div className='p-4 shadow-2xl bg-gray-900 rounded-xl '>
       <div className='flex p-4 justify-around shadow-2xl bg-gray-900 rounded-xl items-center'>
@@ -25,7 +25,7 @@ function TestItem({name, totalMarks, timeDuration, isSection, createdBy, noOfSec
       <div className='flex justify-end gap-2'>
         <button
           className='p-2 bg-orange-200 text-black font-bold rounded-md hover:bg-orange-50'
-          onClick={()=>setSectionEditing(true)}
+          onClick={()=>openSectionEditor(id, noOfSec)}
         >Edit Section</button>
         <button
           className='p-2 bg-orange-200 text-black font-bold rounded-md hover:bg-orange-50'
@@ -35,7 +35,7 @@ function TestItem({name, totalMarks, timeDuration, isSection, createdBy, noOfSec
       </div>
        {sectionEditing && 
       <div  className='fixed inset-0 w-full h-screen overflow-scroll bg-black/50 flex items-center justify-center z-50'>
-        <EditSection id={id} noOfSec={noOfSec}/>
+        <EditSection id={TestId} noOfSec={sec}/>
       </div>
        } 
     </div>

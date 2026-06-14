@@ -10,12 +10,14 @@ import LoginPage from './forms/login.jsx'
 import RegisterPage from './forms/Register.jsx'
 import CreateTest from './forms/CreateTest.jsx'
 import { TestProvider } from './context/testContext.jsx'
+import {Toaster} from 'react-hot-toast'
 function App() {
   const {loginForm, setLoginForm, registerForm, setRegisterForm, createTestForm, setCreateTestForm} = useAuth()
   return (
     
     <TestProvider>
       <div>
+        <Toaster position='top-right'/>
         <Routes>
           <Route index path="/" element={<HomePage />}></Route>
           <Route path="/mytests" element={<MyTests />}></Route>
