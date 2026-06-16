@@ -16,7 +16,9 @@
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-easy-crop": "^6.0.2",
     "react-hot-toast": "^2.6.0",
+    "react-image-crop": "^11.0.10",
     "react-router": "^7.16.0",
     "tailwindcss": "^4.3.0"
   },

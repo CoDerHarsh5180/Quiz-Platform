@@ -11,7 +11,13 @@ export const TestProvider = ({children})=>{
     const tests = user?.tests
     const [sectionEditing, setSectionEditing] = useState(false)
     const [TestId, setTestId]= useState('')
+    const [AddQues, setAddQues] = useState(false)
     const [sec, setSec] = useState(0)
+
+    const openQuesAdder = (id)=>{
+        setTestId(id)
+        setAddQues(true)
+    }
     const openSectionEditor = (id, sec)=>{
         setSectionEditing(true)
         setTestId(id)
@@ -32,7 +38,7 @@ export const TestProvider = ({children})=>{
     }, [user])
 
     return(
-        <TestContext.Provider value={{testArray, loading1, sectionEditing, setSectionEditing, openSectionEditor, TestId, sec}}>
+        <TestContext.Provider value={{testArray, loading1, sectionEditing, setSectionEditing, openSectionEditor, TestId, sec, openQuesAdder, AddQues, setAddQues}}>
             {children}
         </TestContext.Provider>
     )

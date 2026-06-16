@@ -5,7 +5,12 @@ import { createStructure, createSection, createQuestion, getStructure , generate
 import { verifyJWT } from "../middleware/auth.middleware.js"    
 testRouter.route("/createStructure").post(verifyJWT, createStructure)
 testRouter.route("/createSection").post(verifyJWT, createSection)
-testRouter.route("/createQuestion").post(verifyJWT, createQuestion)
+testRouter.route("/createQuestion").post(verifyJWT, upload.fields([
+    {
+        name:"image",
+        maxCount:1
+    }
+]), createQuestion)
 testRouter.route("/getSection").post(verifyJWT, getSection)
 
 testRouter.route("/getStructure").post(verifyJWT, getStructure)

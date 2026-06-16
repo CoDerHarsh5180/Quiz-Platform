@@ -1,124 +1,167 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { useTest } from '../context/testContext';
-import { useState, useEffect } from 'react';
-import { EditTheSection, getSection } from '../Api/apirequests';
-import {X} from 'lucide-react'
-function EditSection({id, noOfSec}) {
-  console.log(noOfSec)
-    const {testArray, loading1, setSectionEditing} = useTest()
-    const [section, setSection] = useState("")
-    const [positiveMarks, setPositiveMarks] = useState(0)
-    const [negativeMarks, setNegativeMarks] = useState(0)
-    const [instructions, setInstructions] = useState("")
-    const [noOfQues, setNoOfQues]=useState(0)
-    const [typeOfQues, setTypeOfQues] = useState('MCQ')
+import { EditTheSection, getSection, getStructure } from '../Api/apirequests';
+import { X } from 'lucide-react';
 
-    useEffect(()=>{
-      getSection(section)
-      .then((data)=>{
-        if(data.data[0] && String(data.data[0].testId)===id){
-          setInstructions(data.data[0].instructions)
-          setPositiveMarks(data.data[0].plusMarks)
-          setNegativeMarks(data.data[0].minusMarks)
-          setNoOfQues(data.data[0].numOfQues)
-          setTypeOfQues(data.data[0].typeOfQues)
-        }
-        console.log(data.data)
+function EditSection({ id, noOfSec }) {
+  console.log(noOfSec);
+  const { testArray, loading1, setSectionEditing } = useTest();
+  const [section, setSection] = useState("");
+  const [positiveMarks, setPositiveMarks] = useState(0);
+  const [negativeMarks, setNegativeMarks] = useState(0);
+  const [instructions, setInstructions] = useState("");
+  const [noOfQues, setNoOfQues] = useState(0);
+  const [typeOfQues, setTypeOfQues] = useState('MCQ');
+  const [sectionArray, setSetionArray] = useState([])
+  useEffect(() => {
+    getStructure(id)
+      .then(res=>{
+        console.log(res.data)
+        setSetionArray(res.data.sections)
       })
-    }, [section])
+      .catch(e=>console.log(e))
+    if (!section) return;
+    getSection(section, id)
+      .then((data) => {
+        if (data.data[0] && String(data.data[0].testId) === id) {
+          setInstructions(data.data[0].instructions);
+          setPositiveMarks(data.data[0].plusMarks);
+          setNegativeMarks(data.data[0].minusMarks);
+          setNoOfQues(data.data[0].numOfQues);
+          setTypeOfQues(data.data[0].typeOfQues);
+        }
+        console.log(data.data);
+      });
+
+      
+  }, [section, id]);
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    EditTheSection(id, section, positiveMarks, negativeMarks, instructions, noOfQues, typeOfQues);
+  };
 
   return (
-    <div>
-        <div className="flex items-center justify-center  ">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8 relative">
-        <span className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700" onClick={()=>{setSectionEditing(false)}}>
-          <X />
-        </span>
-        <h2 className="text-2xl font-semibold text-center mb-2">EDIT YOUR SECTION FROM HERE</h2>
-            <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Select Section
-            </label>
-            <select name="Section" id=""
-                value={section}
-                onChange={(e) => setSection((e.target.value=="None")?(null):(e.target.value))}
-                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"    
-            >
-                <option value="None">None</option>
-                {
-              Array.from({length:noOfSec}, (_,i)=>(
-                <option value={String.fromCharCode(65+i)} className='text-sm bg-gray-600'>Section {String.fromCharCode(65+i)}</option>
-              ))
+    <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md border border-gray-100 relative">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Edit Section</h2>
+      
+      <span 
+        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700 z-10" 
+        onClick={() => { setSectionEditing(false); }}
+      >
+        <X />
+      </span>
+
+      <form onSubmit={handleSave} className="space-y-6">
+        {/* 1. Select Section Dropdown */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Select Section
+          </label>
+          <select 
+            name="Section" 
+            value={section || "None"}
+            onChange={(e) => setSection(e.target.value === "None" ? null : e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-black"    
+          >
+            <option value="None">None</option>
+            {/* {Array.from({ length: noOfSec }, (_, i) => {
+              const secChar = String.fromCharCode(65 + i);
+              return (
+                <option key={secChar} value={secChar}>
+                  Section {secChar}
+                </option>
+              );
+            })} */}
+
+            {
+              sectionArray.map((id, index)=>{
+                const secChar = String.fromCharCode(65 + index);
+                return(
+                  <option key={secChar} value={secChar}>
+                    Section {secChar}
+                  </option>
+                )
+              })
             }
-            </select>
+          </select>
+        </div>
+
+        <hr className="border-gray-200 my-4" />
+
+        {/* 2. Form Fields Grid / Controls */}
+        <div className="space-y-4">
+          {/* Two-Column Grid for Marking Scheme */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                +ve Marks
+              </label>
+              <input
+                type="number"
+                value={positiveMarks}
+                onChange={(e) => setPositiveMarks(e.target.value)}
+                placeholder="Positive Marks"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                -ve Marks
+              </label>
+              <input
+                type="number"
+                value={negativeMarks}
+                onChange={(e) => setNegativeMarks(e.target.value)}
+                placeholder="Negative Marks"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                required
+              />
+            </div>
           </div>
 
-          <div className=''>
-            <label className="block text-sm font-medium text-gray-700">
-              +ve Marks
-            </label>
-            <input
-              type="number"
-              value={positiveMarks}
-              onChange={(e) => setPositiveMarks(e.target.value)}
-              placeholder="Positive Marks"
-              className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
-              required
-            />
-          
-
-          <label className="block text-sm font-medium text-gray-700">
-              -ve Marks
-            </label>
-            <input
-              type="number"
-              value={negativeMarks}
-              onChange={(e) => setNegativeMarks(e.target.value)}
-              placeholder="Negative Marks"
-              className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
-              required
-            />
-          </div>
-
+          {/* Instructions Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Instruction
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Instructions
             </label>
-            <input
-              type="text"
+            <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              placeholder="instructions"
-              className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
+              placeholder="Enter instructions for this section..."
+              rows="3"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
               required
             />
           </div>
 
-          <div>
-             <label className="block text-sm font-medium text-gray-700">
-              Number of Questions
-            </label>
-            <input
-              type="number"
-              value={noOfQues}
-              onChange={(e) => setNoOfQues(e.target.value)}
-              placeholder="Add Number of Questions"
-              className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
-              required
-            />
-          </div>
-
-            
+          {/* Number of Questions & Selection Type Wrapper */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Number of Questions
+              </label>
+              <input
+                type="number"
+                value={noOfQues}
+                onChange={(e) => setNoOfQues(e.target.value)}
+                placeholder="Add Number of Questions"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Select Type of Question
               </label>
               <select
                 value={typeOfQues}
                 onChange={(e) => setTypeOfQues(e.target.value)}
-                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-black"
               >
-                
                 <option value="MCQ">MCQ</option>
                 <option value="MSQ">MSQ</option>
                 <option value="NUMERICAL">NUMERICAL</option>
@@ -126,26 +169,21 @@ function EditSection({id, noOfSec}) {
                 <option value="DESCRIPTIVE">DESCRIPTIVE</option>
               </select>
             </div>
+          </div>
+        </div>
 
-         
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                EditTheSection(id, section, positiveMarks, negativeMarks, instructions, noOfQues, typeOfQues)
-              }}
-              className="w-full bg-violet-500 text-white py-2 rounded-md hover:bg-violet-600 transition"
-            >
-                SAVE
-            </button>
-          
-       
-
-
-       
-      </div>
+        {/* Action Button Segment */}
+        <div className="pt-4">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
     </div>
-    </div>
-  )
+  );
 }
 
-export default EditSection
+export default EditSection;

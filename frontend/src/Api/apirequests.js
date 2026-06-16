@@ -14,7 +14,14 @@ const axiosInstance = axios.create({
 
 const registerUser = async(name, email, username, experience, field, password)=>{
     try {
-        const response = await axiosInstance.post('/register', {name, email, username, experience, field, password}, {withCredentials:true});
+        const response = await axiosInstance.post('/register', {
+            name, 
+            email, 
+            username, 
+            experience, 
+            field, 
+            password
+        }, {withCredentials:true});
         console.log(response.data);
         return response.data;
     }catch(e){
@@ -24,7 +31,15 @@ const registerUser = async(name, email, username, experience, field, password)=>
 
 const verifyOTP = async(name,email, username, experience, field, password, otp)=>{
     try {
-        const response = await axiosInstance.post('/register/otp', {name, email, username, experience, field, password, otp}, {withCredentials:true});
+        const response = await axiosInstance.post('/register/otp', {
+            name, 
+            email, 
+            username, 
+            experience, 
+            field, 
+            password, 
+            otp
+        }, {withCredentials:true});
         console.log(response.data);
         return response.data;
     }catch(e){
@@ -34,7 +49,11 @@ const verifyOTP = async(name,email, username, experience, field, password, otp)=
 
 const loginUser = async(identifier, password)=>{
     try {
-        const response = await axiosInstance.post('/login', {username: identifier, email: identifier, password}, {withCredentials:true});
+        const response = await axiosInstance.post('/login', {
+            username: identifier, 
+            email: identifier, 
+            password
+        }, {withCredentials:true});
         console.log(response.data);
         window.location.reload();
         toast.success("Logged In Successfully")
@@ -72,7 +91,14 @@ const logoutUser = async()=>{
 
 const createStructure = async(name, totalMarks,timeDuration, noOfSec, noOfSub, subjects)=>{
     try{
-        const res = await axiosInstance.post('/test/createStructure', { name, totalMarks, timeDuration, noOfSec, noOfSub, subjects}, {withCredentials:true})
+        const res = await axiosInstance.post('/test/createStructure', { 
+            name, 
+            totalMarks, 
+            timeDuration, 
+            noOfSec, 
+            noOfSub, 
+            subjects
+        }, {withCredentials:true})
         console.log(res.data);
         toast.success("Structure Created Successfully")
         return res.data;
@@ -97,7 +123,16 @@ const getStructure = async(testId)=>{
 
 const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instructions, numOfQues, typeOfQues)=>{
     try{
-        const res = await axiosInstance.post('/test/createSection', {testId, plusMarks, minusMarks, instructions, numOfQues, typeOfQues, UserSection}, {withCredentials:true})
+        const res = await axiosInstance.post('/test/createSection', {
+            testId, 
+            plusMarks, 
+            minusMarks, 
+            instructions, 
+            numOfQues, 
+            typeOfQues, 
+            UserSection
+        }, 
+        {withCredentials:true})
         console.log(res.data);
         if(UserSection){
             toast.success("Section Edited Successfully")
@@ -113,9 +148,9 @@ const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instruct
 
 }
 
-const getSection = async(secName)=>{
+const getSection = async(secName, id)=>{
     try{
-        const res = await axiosInstance.post('/test/getSection', {secName}, {withCredentials:true})
+        const res = await axiosInstance.post('/test/getSection', {secName, id}, {withCredentials:true})
         return res.data
     }
     catch(e){
@@ -123,5 +158,51 @@ const getSection = async(secName)=>{
     }
 }
 
+
+const createQuestion = async(text, sectionName, options, correctAnswer, subject, testId, img)=>{
+    try{
+        const res = await axiosInstance.post('/test/createQuestion', {
+            text,
+            sectionName,
+            options,
+            correctAnswer, 
+            subject,
+            testId
+        }, {withCredentials:true})
+        return res.data
+    }
+    catch(e){
+        throw new Error(e)
+    }
+}
+
+const createQuestionAI = async(promptImg, image, subject)=>{
+    try{
+        const res = await axios.post('/test/createQuesUsingAI', {
+            prompt:promptImg,
+            image,
+            subject
+        })
+    }
+    catch(e){
+        throw new Error(e)
+    }
+}
+
+
+
+
 export default axiosInstance;
-export {loginUser, showData, logoutUser, registerUser, verifyOTP, createStructure, getStructure, EditTheSection, getSection};
+export {
+    loginUser, 
+    showData, 
+    logoutUser, 
+    registerUser, 
+    verifyOTP, 
+    createStructure, 
+    getStructure, 
+    EditTheSection, 
+    getSection, 
+    createQuestion, 
+    createQuestionAI
+};

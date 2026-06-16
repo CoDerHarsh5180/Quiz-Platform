@@ -45,6 +45,7 @@ const sectionCreate = asyncHandler(async(req, res)=>{
         console.log("Test not found")
         throw new ApiError(404, "Test not found")
     }
+    console.log(test)
     if(!UserSection){
         const length = test.sections.length
         if(length>=test.noOfSec){
@@ -69,7 +70,13 @@ const sectionCreate = asyncHandler(async(req, res)=>{
         res.status(201).json(new ApiResponse(201, section, "Section created successfully"))
     }
     else{
-        const section = await Section.find({secName:UserSection}) 
+        const section = await Section.find({
+            $and:[
+                {secName:UserSection},
+                {testId}
+            ]
+        }) 
+        console.log(section)
         if(!section){
             if(test.sections.length<noOfSec){
                 const length = test.sections.length
@@ -93,6 +100,7 @@ const sectionCreate = asyncHandler(async(req, res)=>{
                 throw ApiError(404, "This Section is Not Defined in the Structure")
             }
         }
+        console.log(section)
         section[0].plusMarks=plusMarks
         section[0].minusMarks=minusMarks
         section[0].instructions=instructions
@@ -107,8 +115,15 @@ const sectionCreate = asyncHandler(async(req, res)=>{
 
 
 const getSection = asyncHandler(async(req, res)=>{
-    const {secName} = req.body
-    const section = await Section.find({secName:secName})
+    const {secName, id} = req.body
+    console.log("Getting Section")
+    console.log(req.body)
+    const section = await Section.find({
+        $and:[
+            {secName},{testId:id}
+        ]
+    })
+    console.log(section)
     if(!section){
         res.status(200).json(
             new ApiResponse(200, {}, "No Section of this name present")
@@ -153,7 +168,9 @@ const createQuestion = asyncHandler(async(req, res)=>{
         subject,
         image: img?.url
     })
+    
     unlinkFile(image)
+    console.log("Question Created")
     section.questions.push(question._id)
     await section.save()
     res.status(201).json(new ApiResponse(201, question, "Question created successfully"))
