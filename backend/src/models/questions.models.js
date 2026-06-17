@@ -16,6 +16,7 @@ const questionSchema = new mongoose.Schema({
     },
     image:{
         type: String,
+        default:''
     },
     section: {
         type: Schema.Types.ObjectId,

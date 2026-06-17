@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {toast} from 'react-hot-toast';
-
+import dataURLtoFile from '../utils/URLtoFile';
 const API_BASE_URL = 'http://localhost:3000/api/v1'; 
 
 const axiosInstance = axios.create({
@@ -8,6 +8,9 @@ const axiosInstance = axios.create({
   timeout: 10000,
 });
 
+const axiosAI = axios.create({
+    baseURL: API_BASE_URL
+})
 
 
 
@@ -158,38 +161,58 @@ const getSection = async(secName, id)=>{
     }
 }
 
+const createQuestion = async (text, sectionName, options, correctAnswer, subject, testId, img) => {
+    try {
+        const formData = new FormData();
+        
+        formData.append('text', text);
+        formData.append('sectionName', sectionName);
+        formData.append('correctAnswer', correctAnswer);
+        formData.append('subject', subject);
+        formData.append('testId', testId);
+        formData.append('options', JSON.stringify(options)); 
 
-const createQuestion = async(text, sectionName, options, correctAnswer, subject, testId, img)=>{
-    try{
-        const res = await axiosInstance.post('/test/createQuestion', {
-            text,
-            sectionName,
-            options,
-            correctAnswer, 
-            subject,
-            testId
-        }, {withCredentials:true})
-        return res.data
-    }
-    catch(e){
-        throw new Error(e)
-    }
-}
+        // If an image exists, convert it and append it as a file
+        if (img) {
+            const imageFile = dataURLtoFile(img, 'question-image.jpg');
+            formData.append('image', imageFile); 
+        }
 
-const createQuestionAI = async(promptImg, image, subject)=>{
-    try{
-        const res = await axios.post('/test/createQuesUsingAI', {
-            prompt:promptImg,
-            image,
-            subject
-        })
+        const res = await axiosInstance.post('/test/createQuestion', formData, {withCredentials: true,});
+        console.log(res.data)
+        return res.data;
+    } catch (e) {
+        const errorMessage = e.response?.data?.message || e.message || "Failed to create question";
+        throw new Error(errorMessage);
     }
-    catch(e){
-        throw new Error(e)
+};
+
+const createQuestionAI = async (promptImg, referenceImg, subject) => {
+    try {
+        const formData = new FormData();
+        formData.append('subject', subject);
+
+        // Convert and append the prompt image
+        if (promptImg) {
+            const promptFile = dataURLtoFile(promptImg, 'prompt-image.jpg');
+            formData.append('prompt', promptFile); // accessible via req.files.promptImg
+        }
+
+        // Convert and append the reference image
+        if (referenceImg) {
+            const refFile = dataURLtoFile(referenceImg, 'reference-image.jpg');
+            formData.append('image', refFile); 
+        }
+
+        const res = await axiosAI.post('/test/createQuesUsingAI', formData, {withCredentials: true});
+    console.log("Question Created")
+        
+        return res.data;
+    } catch (e) {
+        const errorMessage = e.response?.data?.message || e.message || "Failed to create AI question";
+        throw new Error(errorMessage);
     }
-}
-
-
+};
 
 
 export default axiosInstance;

@@ -23,7 +23,7 @@ export default function CreateQuestion({ id, sec }) {
   const [type, setType] = useState('')
 
   useEffect(()=>{
-    getSection(section)
+    getSection(section, id)
           .then((data) => {
             if (data.data[0] && String(data.data[0].testId) === id) {
               setType(data.data[0].typeOfQues);
@@ -32,6 +32,13 @@ export default function CreateQuestion({ id, sec }) {
             console.log(data.data);
           });
   },[section])
+
+  useEffect(()=>{
+    console.log(optionImg)
+    console.log(sectionBImg)
+    console.log(promptImg)
+    console.log(referenceImg)
+  },[optionImg, sectionBImg, promptImg, referenceImg])
   const handleSubmit = (e) => {
     e.preventDefault();
     if(mode==='manual'){
@@ -150,7 +157,6 @@ export default function CreateQuestion({ id, sec }) {
                       key={idx}
                       type="text" 
                       placeholder={opt} 
-                      value={options[idx]}
                       onChange={(e)=>setOption(prev=>{prev[idx]=e.target.value; return prev})}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     />
