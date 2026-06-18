@@ -8,6 +8,13 @@
     ],
     "routes":[{
         "src":"/(.*)",
+        "headres":{
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Origin": "https://quiz-platform-chi-ten.vercel.app",
+            "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT",
+            "Access-Control-Allow-Headers": "Authorization"
+
+        },
         "dest":"src/index.js"
     }]
 }
