@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {toast} from 'react-hot-toast';
 import dataURLtoFile from '../utils/URLtoFile';
-const API_BASE_URL = 'http://localhost:3000/api/v1'; 
+const API_BASE_URL = `${import.meta.env.VITE_APP_URL}/api/v1`; 
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
