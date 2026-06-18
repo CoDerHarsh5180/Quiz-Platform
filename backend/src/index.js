@@ -13,3 +13,4 @@ connectDB()
 })
 .catch(e=>{console.log("Database notconnected")})
  
+export default app
