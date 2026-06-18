@@ -12,9 +12,6 @@ const axiosAI = axios.create({
     baseURL: API_BASE_URL
 })
 
-
-
-
 const registerUser = async(name, email, username, experience, field, password)=>{
     try {
         const response = await axiosInstance.post('/register', {
@@ -28,6 +25,7 @@ const registerUser = async(name, email, username, experience, field, password)=>
         console.log(response.data);
         return response.data;
     }catch(e){
+        toast.error("Some Error Occured")
         throw new Error('Failed to register');
     }
 }
@@ -46,6 +44,7 @@ const verifyOTP = async(name,email, username, experience, field, password, otp)=
         console.log(response.data);
         return response.data;
     }catch(e){
+        toast.error("Incorrect OTP")
         throw new Error('Failed to verify OTP');
     }
 }
@@ -62,6 +61,7 @@ const loginUser = async(identifier, password)=>{
         toast.success("Logged In Successfully")
         return response.data;
     }catch(e){
+        toast.error("Failed to Login")
         throw new Error('Failed to login');
     }
 }
@@ -88,6 +88,7 @@ const logoutUser = async()=>{
         toast.success("Logged Out Successfully")
         return response.data;
     }catch(e){
+        toast.error("Request Failed")
         throw new Error('Failed to logout');
     }
 }
@@ -107,6 +108,7 @@ const createStructure = async(name, totalMarks,timeDuration, noOfSec, noOfSub, s
         return res.data;
     }
     catch(e){
+        toast.error("Request Failed")
         console.log(e);
     }
     
@@ -119,6 +121,7 @@ const getStructure = async(testId)=>{
         return res.data;
     }
     catch(e){
+        toast.error("Request Failed")
         console.log(e);
     }
 }
@@ -146,6 +149,7 @@ const EditTheSection = async(testId,UserSection, plusMarks, minusMarks, instruct
         return res.data;
     }
     catch(e){
+        toast.error("Request Failed")
         throw new Error('Failed to create')
     }    
 
@@ -157,11 +161,12 @@ const getSection = async(secName, id)=>{
         return res.data
     }
     catch(e){
+        toast.error("Request Failed")
         throw new Error(501, e)
     }
 }
 
-const createQuestion = async (text, sectionName, options, correctAnswer, subject, testId, img) => {
+const createQuestion = async (text, sectionName, options, correctAnswer, subject, testId, img, setLoading) => {
     try {
         const formData = new FormData();
         
@@ -180,14 +185,17 @@ const createQuestion = async (text, sectionName, options, correctAnswer, subject
 
         const res = await axiosInstance.post('/test/createQuestion', formData, {withCredentials: true,});
         console.log(res.data)
+        setLoading(false)
+        toast.success("Question Added Successfully")
         return res.data;
     } catch (e) {
         const errorMessage = e.response?.data?.message || e.message || "Failed to create question";
+        toast.error("Request Failed")
         throw new Error(errorMessage);
     }
 };
 
-const createQuestionAI = async (promptImg, referenceImg, subject, testId, secName) => {
+const createQuestionAI = async (promptImg, referenceImg, subject, testId, secName, setLoading) => {
     try {
         const formData = new FormData();
         formData.append('subject', subject);
@@ -203,11 +211,13 @@ const createQuestionAI = async (promptImg, referenceImg, subject, testId, secNam
         formData.append('testId', testId)
         formData.append('sectionName', secName)
         const res = await axiosAI.post('/test/createQuesUsingAI', formData, {withCredentials: true});
-    console.log("Question Created")
-        
+        console.log("Question Created")
+        setLoading(false)
+        toast.success("Question Added Successfully")
         return res.data;
     } catch (e) {
         const errorMessage = e.response?.data?.message || e.message || "Failed to create AI question";
+        toast.error("Request Failed")
         throw new Error(errorMessage);
     }
 };

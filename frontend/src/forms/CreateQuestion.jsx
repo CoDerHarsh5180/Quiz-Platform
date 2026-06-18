@@ -22,6 +22,9 @@ export default function CreateQuestion({ id, sec }) {
   const [subject, setSubject]=useState('')
   const [type, setType] = useState('')
   const [sectionArray, setSetionArray] = useState([])
+
+  const [loading, setLoading] = useState(false)
+
   useEffect(()=>{
     getStructure(id)
       .then(res=>{
@@ -55,7 +58,8 @@ export default function CreateQuestion({ id, sec }) {
           correctAnswer, 
           subject,
           id,
-          (type==='MCQ' || type==='MSQ')?optionImg:sectionBImg
+          (type==='MCQ' || type==='MSQ')?optionImg:sectionBImg,
+          setLoading
       )
     }
 
@@ -65,7 +69,8 @@ export default function CreateQuestion({ id, sec }) {
         referenceImg,
         subject,
         id,
-        section
+        section,
+        setLoading
       )
     }
 
@@ -232,13 +237,15 @@ export default function CreateQuestion({ id, sec }) {
         )}
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-4 flex justify-between">
           <button 
             type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer"
+            className={(!loading && `w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer`) || (loading && `loader`)} 
+            onClick = {()=>{setLoading(true)}}
           >
             Submit Request
           </button>
+          {loading && <button className='max-w-1/2 p-2 bg-red-500 text-white' onClick={()=>{setLoading(false)}}>Retry!</button>}
         </div>
       </form>
     </div>
