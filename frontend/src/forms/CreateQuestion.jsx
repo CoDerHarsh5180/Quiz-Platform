@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css'; 
 import { useTest } from '../context/testContext';
-import { createQuestion, createQuestionAI, getSection } from '../Api/apirequests';
+import { createQuestion, createQuestionAI, getSection, getStructure } from '../Api/apirequests';
 
 
 export default function CreateQuestion({ id, sec }) {
@@ -21,8 +21,14 @@ export default function CreateQuestion({ id, sec }) {
   const [correctAnswer, setCorrectAnswer]=useState('')
   const [subject, setSubject]=useState('')
   const [type, setType] = useState('')
-
+  const [sectionArray, setSetionArray] = useState([])
   useEffect(()=>{
+    getStructure(id)
+      .then(res=>{
+        console.log(res.data)
+        setSetionArray(res.data.sections)
+      })
+      .catch(e=>console.log(e))
     getSection(section, id)
           .then((data) => {
             if (data.data[0] && String(data.data[0].testId) === id) {
@@ -57,7 +63,9 @@ export default function CreateQuestion({ id, sec }) {
       createQuestionAI(
         promptImg,
         referenceImg,
-        subject
+        subject,
+        id,
+        section
       )
     }
 
@@ -82,14 +90,16 @@ export default function CreateQuestion({ id, sec }) {
             onChange={(e) => setSection(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
           >
-            {Array.from({ length: sec }, (_, i) => {
-              const secChar = String.fromCharCode(65 + i);
-              return (
-                <option key={secChar} value={secChar}>
-                  Section {secChar}
-                </option>
-              );
-            })}
+            {
+              sectionArray.map((id, index)=>{
+                const secChar = String.fromCharCode(65 + index);
+                return(
+                  <option key={secChar} value={secChar}>
+                    Section {secChar}
+                  </option>
+                )
+              })
+            }
           </select>
         </div>
 

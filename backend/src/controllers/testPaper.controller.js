@@ -210,17 +210,19 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
     console.log(refImg)
     let ref1;
     if(refImg) ref1 = await uploadOnCloudinary(refImg) 
-        console.log("Done-1")
+    console.log("Done-1")
     if(image) img = await uploadOnCloudinary(image)   
     console.log("Done-2")
     const response = await generateQues(ref1?.url, type)
-    console.log(response.question)
+    console.log(typeof(response))
+
+    console.log(response)
     const question = await Question.create({
-        creator:user._id,
+        creator:user._id, 
         index: section[0].questions.length + 1,
         section:section[0]._id,
         text:response.question,
-        subject,
+        subject:subject,
         image:img?.url,
         options:response.options,
         correctAnswer:response.correctAnswer

@@ -187,23 +187,21 @@ const createQuestion = async (text, sectionName, options, correctAnswer, subject
     }
 };
 
-const createQuestionAI = async (promptImg, referenceImg, subject) => {
+const createQuestionAI = async (promptImg, referenceImg, subject, testId, secName) => {
     try {
         const formData = new FormData();
         formData.append('subject', subject);
-
-        // Convert and append the prompt image
         if (promptImg) {
             const promptFile = dataURLtoFile(promptImg, 'prompt-image.jpg');
-            formData.append('prompt', promptFile); // accessible via req.files.promptImg
+            formData.append('prompt', promptFile); 
         }
 
-        // Convert and append the reference image
         if (referenceImg) {
             const refFile = dataURLtoFile(referenceImg, 'reference-image.jpg');
             formData.append('image', refFile); 
         }
-
+        formData.append('testId', testId)
+        formData.append('sectionName', secName)
         const res = await axiosAI.post('/test/createQuesUsingAI', formData, {withCredentials: true});
     console.log("Question Created")
         
