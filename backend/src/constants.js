@@ -1,1 +1,1 @@
-export const DB_NAME = "QuizDB"
+export const DB_NAME = "QuizPlatform"

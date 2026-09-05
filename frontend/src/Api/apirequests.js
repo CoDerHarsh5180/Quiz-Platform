@@ -25,6 +25,7 @@ const registerUser = async(name, email, username, experience, field, password)=>
         console.log(response.data);
         return response.data;
     }catch(e){
+        console.log(e)
         toast.error("Some Error Occured")
         throw new Error('Failed to register');
     }

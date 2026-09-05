@@ -11,12 +11,12 @@ function CreateTest() {
     const [subjects, setSubjects] = useState([''])
     const [noOfSec, setNoOfSec] = useState(0)
   return (
-    <div className='bg-white p-5 rounded relative'>
+    <div className='bg-white p-10 rounded relative h-5/8'>
         <span className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700" onClick={()=>{setCreateTestForm(false)}}>
             <X />
         </span>
         <h2 className="text-2xl font-semibold text-center mb-2">Create a new test Structure</h2>
-        <div className="space-y-2 sm:grid grid-cols-2 gap-2">
+        <div className="space-y-2 sm:grid grid-cols-2 gap-2 overflow-y-scroll p-20 border max-h-5/6">
         <div>
             <label className="block text-sm font-medium text-gray-700">
                 Title

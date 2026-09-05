@@ -9,7 +9,7 @@ function HomePage() {
  
   return (
     <div>
-        <div className='bg-gray-900 text-white w-full'>
+        <div className='bg-gray-900 text-white w-full max-h-full'>
             <Navbar />
             <HeroSection />
         </div>

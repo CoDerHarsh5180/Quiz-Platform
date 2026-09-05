@@ -40,11 +40,11 @@ function Navbar() {
         <button className='md:hidden border p-1 rounded z-50' onClick={()=>{setMenuOpen(prev=>!prev)}}><Menu /></button>
         {menuOpen && <div className='w-full bg-gray-700/30 flex flex-col gap-2 md:hidden absolute top-24 p-5 left-0  rounded backdrop-blur-2xl'>
         
-            <button>Home</button>
+            <button  onClick={()=>{navigate('/')}}>Home</button>
             <hr />
             <button onClick={()=>setCreateTestForm(true)}>Create New Test</button>
             <hr />
-            <button>My Tests</button>
+            <button onClick={()=>{navigate('mytests')}}>My Tests</button>
             <hr />
             {user && <div className='text-center'>{user.data.email}</div>}
             {!user &&<button onClick={()=>setRegisterForm(true)}>Register</button>}
