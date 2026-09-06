@@ -70,7 +70,7 @@ teacherSchema.methods.generateAccessToken =async function(){
         }
     )
 }
-teacherSchema.methods.generateRefreshToken =async function(){
+teacherSchema.methods.generateRefreshToken = async function(){
     try{
         return await jwt.sign(
             {
@@ -79,13 +79,12 @@ teacherSchema.methods.generateRefreshToken =async function(){
             process.env.REFRESH_TOKEN,
             {
                 expiresIn:process.env.REFRESH_TOKEN_EXPIRY
-
             }
         )
     }catch(e){
         console.log(e)
     }
-    
 }
 
 export const Teacher = mongoose.model("Teacher", teacherSchema)
+

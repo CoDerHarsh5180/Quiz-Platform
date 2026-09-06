@@ -22,7 +22,7 @@ export default function CreateQuestion({ id, sec }) {
   const [subject, setSubject]=useState('')
   const [type, setType] = useState('')
   const [sectionArray, setSetionArray] = useState([])
-
+  const [subjects, setSubjects] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(()=>{
@@ -30,6 +30,7 @@ export default function CreateQuestion({ id, sec }) {
       .then(res=>{
         console.log(res.data)
         setSetionArray(res.data.sections)
+        setSubjects(res.data.subjects)
       })
       .catch(e=>console.log(e))
     getSection(section, id)
@@ -154,13 +155,21 @@ export default function CreateQuestion({ id, sec }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-              <input 
-                placeholder="Subject" 
+               <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+            <div>
+              <select 
                 value={subject}
                 onChange={(e)=>setSubject(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
+              >
+                <option value="">Select a Subject</option>
+                {subjects.map((subj) => (
+                  <option key={subj._id} value={subj._id} className='text-black text-lg bg-gray-200 hover:bg-gray-300'>
+                    {subj}
+                  </option>
+                ))}
+              </select>
+            </div>
             </div>
 
             {type==='MCQ' || type==='MSQ' ? (
@@ -208,7 +217,7 @@ export default function CreateQuestion({ id, sec }) {
           </div>
         ) : (
           <div key="prompt-mode-wrapper" className="space-y-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
               <input 
                 placeholder="Subject" 
@@ -216,8 +225,22 @@ export default function CreateQuestion({ id, sec }) {
                 onChange={(e)=>setSubject(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
+            </div> */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+            <div>
+              <select 
+                value={subject}
+                onChange={(e)=>setSubject(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                <option value="">Select a Subject</option>
+                {subjects.map((subj) => (
+                  <option key={subj._id} value={subj._id} className='text-black text-lg bg-gray-200 hover:bg-gray-300'>
+                    {subj}
+                  </option>
+                ))}
+              </select>
             </div>
-
             <div>
               <ImageUploadWithCrop 
                 label="Prompt Image" 

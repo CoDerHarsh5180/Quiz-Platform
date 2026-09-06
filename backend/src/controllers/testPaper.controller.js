@@ -120,7 +120,6 @@ const getSection = asyncHandler(async(req, res)=>{
 
 const createQuestion = asyncHandler(async(req, res)=>{
     console.log("Creating Question")
-    console.log(req)
     const { text, sectionName, options, correctAnswer, subject, testId} = req.body
     const creator = await Teacher.findById(req.user._id)
     console.log("Creator Detected")
@@ -246,4 +245,26 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
 })
 
 
-export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection}
+const getQuestions = asyncHandler(async(req, res)=>{
+    const {testId, section} = req.body
+    const sec = await Section.find({
+        $and:[
+            {testId:testId},
+            {secName:section}
+        ]
+    })
+    const questions = []
+    const questionId = sec[0].questions
+    for(let i=0;i<questionId.length;i++){
+        const question = await Question.findById(questionId[i])
+        if(!question){
+            console.log("Question not found")
+            throw new ApiError(404, "Question not found")
+        }
+        questions.push(question)
+    }
+    res.status(200).json(new ApiResponse(200, questions, "Questions Fetched Successfully"))
+})
+
+
+export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection, getQuestions}

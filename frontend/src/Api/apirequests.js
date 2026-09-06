@@ -223,6 +223,18 @@ const createQuestionAI = async (promptImg, referenceImg, subject, testId, secNam
     }
 };
 
+const getQuestions = async (sectionName, testId) => {
+    try {
+        const res = await axiosInstance.post('/test/getQuestions', { sectionName, testId }, { withCredentials: true });
+        console.log(res.data);
+        return res.data;
+    } catch (e) {
+        const errorMessage = e.response?.data?.message || e.message || "Failed to fetch questions";
+        toast.error("Request Failed")
+        throw new Error(errorMessage);
+    }   
+}
+
 
 export default axiosInstance;
 export {
@@ -235,6 +247,9 @@ export {
     getStructure, 
     EditTheSection, 
     getSection, 
+    getQuestions,
     createQuestion, 
     createQuestionAI
 };
+
+    

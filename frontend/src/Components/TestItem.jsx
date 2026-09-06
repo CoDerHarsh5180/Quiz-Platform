@@ -2,8 +2,12 @@ import React from 'react'
 import { useTest } from '../context/testContext'
 import EditSection from '../forms/EditSection'
 import CreateQuestion from '../forms/CreateQuestion'
+import getQuestions from '../Api/apirequests'
 function TestItem({name, totalMarks, timeDuration, isSection, createdBy, noOfSec, id}) {
   const {setSectionEditing, sectionEditing, openSectionEditor, TestId, sec, openQuesAdder, AddQues, setAddQues} = useTest()
+  getQuestions(id).then((data)=>{
+    console.log(data)
+  })
   return (
     <div className='p-4 shadow-2xl bg-gray-900 rounded-xl space-y-2'>
       <div className='flex p-4 justify-around shadow-2xl bg-gray-900 rounded-xl items-center'>
