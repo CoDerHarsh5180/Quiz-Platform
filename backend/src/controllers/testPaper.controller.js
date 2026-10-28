@@ -143,19 +143,22 @@ const createQuestion = asyncHandler(async(req, res)=>{
     console.log("Image Path: ", image)
     let img;
     if(image){img = await uploadOnCloudinary(image)}
-    console.log({sectionName, testId})
-    
+    const secType = section[0].typeOfQues
+    const parsedOptions = (secType === 'NUMERICAL' || secType === 'DESCRIPTIVE')
+        ? []
+        : (options ? JSON.parse(options) : [])
+
     const question = await Question.create({
         creator: creator._id,
         index: section[0].questions.length + 1,
         text,
         section: section[0]._id,
-        options:JSON.parse(options),
+        options: parsedOptions,
         correctAnswer,
         subject,
         image: img?.url
     })
-    
+    console.log("Question Created")
     Promise.resolve(unlinkFile(image))
     .catch(e=>console.log("Image not found"))
     console.log("Question Created")
@@ -198,8 +201,7 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
         console.log("Section not found")
         throw new ApiError(404, "Section Not Found")
     }
-    console.log(section[0])
-    const type = section.typeOfQues
+    const type = section[0]?.typeOfQues || 'MCQ'
     const image = req.files?.image?.[0]?.path
     console.log("Image Path: ", image)
     let img;
@@ -223,7 +225,7 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
         text:response.question,
         subject:subject,
         image:img?.url,
-        options:response.options,
+        options: (type === 'NUMERICAL' || type === 'DESCRIPTIVE') ? [] : (response.options || []),
         correctAnswer:response.correctAnswer
     })
     console.log("Question Created")
@@ -246,25 +248,64 @@ const generateQuesImg = asyncHandler(async(req, res)=>{
 
 
 const getQuestions = asyncHandler(async(req, res)=>{
-    const {testId, section} = req.body
-    const sec = await Section.find({
-        $and:[
-            {testId:testId},
-            {secName:section}
-        ]
-    })
+    console.log("Getting Questions")
+    const {testId} = req.body
+    console.log(testId)
+    const sec = await Section.find({testId})
+    if(!sec || sec.length === 0){
+        console.log("No sections found")
+        return res.status(200).json(new ApiResponse(200, [], "No sections found"))
+    }
     const questions = []
-    const questionId = sec[0].questions
-    for(let i=0;i<questionId.length;i++){
-        const question = await Question.findById(questionId[i])
-        if(!question){
-            console.log("Question not found")
-            throw new ApiError(404, "Question not found")
+    for(const s of sec){
+        for(const questionId of s.questions){
+            const question = await Question.findById(questionId)
+            if(question) questions.push(question)
         }
-        questions.push(question)
     }
     res.status(200).json(new ApiResponse(200, questions, "Questions Fetched Successfully"))
 })
 
 
-export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection, getQuestions}
+const editQuestion = asyncHandler(async(req, res)=>{
+    console.log("Editing Question")
+    const { questionId, text, options, correctAnswer, subject } = req.body
+    const creator = await Teacher.findById(req.user._id)
+    if(!creator){
+        console.log("Teacher not found")
+        throw new ApiError(404, "Teacher not found")
+    }
+    const question = await Question.findById(questionId)
+    if(!question){
+        console.log("Question not found")
+        throw new ApiError(404, "Question not found")
+    }
+    if(String(question.creator) !== String(creator._id)){
+        console.log("Unauthorized")
+        throw new ApiError(403, "Unauthorized to edit this question")
+    }
+
+    const image = req.files?.image?.[0]?.path
+    console.log("Image Path: ", image)
+    let img
+    if(image) img = await uploadOnCloudinary(image)
+
+    if(text)          question.text          = text
+    if(options)       question.options       = JSON.parse(options)
+    if(correctAnswer) question.correctAnswer = correctAnswer
+    if(subject)       question.subject       = subject
+    if(img?.url)      question.image         = img.url
+
+    await question.save()
+    console.log("Question Updated")
+
+    if(image){
+        Promise.resolve(unlinkFile(image))
+        .catch(e => console.log("Image not found"))
+    }
+
+    res.status(200).json(new ApiResponse(200, question, "Question updated successfully"))
+})
+
+
+export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection, getQuestions, editQuestion}

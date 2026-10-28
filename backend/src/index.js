@@ -7,14 +7,11 @@ dotenv.config({
 
 connectDB()
 .then(()=>{
-    if(process.env.NODE_ENV !== 'production'){
-        app.listen(process.env.PORT || 3000, ()=>{
-            console.log("Server started")
-        }) 
-    }
-    
+    app.listen(process.env.PORT || 5000, '0.0.0.0',()=>{
+        console.log("Server started on port", process.env.PORT || 5000)
+    }) 
 })
-.catch(e=>{console.log("Database notconnected")})
+.catch(e=>{console.log("Database not connected")})
  
 
 export default app

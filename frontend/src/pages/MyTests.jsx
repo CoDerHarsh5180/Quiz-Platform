@@ -3,12 +3,13 @@ import {useAuth} from '../context/teacherContext.jsx'
 import Navbar from '../Components/Navbar.jsx'
 import { useTest } from '../context/testContext.jsx'
 import TestItem from '../Components/TestItem.jsx'
-import EditSection from '../forms/EditSection.jsx'
+
 function MyTests() {
     const {testArray, loading1} = useTest()
-   
+    
     if(!loading1) console.log(testArray)
     const {user, loading, setLoginForm, setCreateTestForm} = useAuth()
+    // console.log(typeof(user?.data?.tests))
     if(!user){
         return(
             <div className='bg-gray-900 text-white'>
@@ -25,7 +26,8 @@ function MyTests() {
             
         )
     }
-    if(!user.data.tests){
+    if(!user?.data?.tests){
+        
         return(
             <div className='bg-gray-900 text-white'>
                 <Navbar />

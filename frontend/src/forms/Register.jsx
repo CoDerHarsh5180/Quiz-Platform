@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router";
-import { loginUser } from "../Api/apirequests";
-import { verifyOTP, registerUser } from "../Api/apirequests";
+
+import { verifyOTP, registerUser } from "../Api/authApi";
 import { X } from "lucide-react";
 import { useAuth } from "../context/teacherContext";
 const RegisterPage = ({cancel}) => {

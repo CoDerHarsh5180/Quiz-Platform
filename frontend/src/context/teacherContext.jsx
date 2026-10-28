@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useState, useEffect } from "react";
-import {showData} from "../Api/apirequests";
+import { showData } from "../Api/authApi";
 const TeacherContext = createContext(null);
 
 export const TeacherProvider = ({ children }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTest } from '../context/testContext';
-import { EditTheSection, getSection, getStructure } from '../Api/apirequests';
+import { EditTheSection, getSection, getStructure } from '../Api/structureApi';
 import { X } from 'lucide-react';
 
 function EditSection({ id, noOfSec }) {

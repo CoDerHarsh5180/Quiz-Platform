@@ -1,11 +1,11 @@
 import React from 'react'
 import {Menu} from 'lucide-react'
 import { useState } from 'react'
-import { loginUser } from '../Api/apirequests'
+import { loginUser } from '../Api/authApi.js'
 import LoginPage from '../forms/login'
 import { useAuth } from '../context/teacherContext.jsx'
-import {logoutUser} from '../Api/apirequests'
-import {registerUser} from '../Api/apirequests'
+import { logoutUser } from '../Api/authApi.js'
+import { registerUser } from '../Api/authApi.js'
 import RegisterPage from '../forms/Register'
 import { useNavigate } from 'react-router'
 function Navbar() {
@@ -27,7 +27,7 @@ function Navbar() {
             <div>|</div>
             <button onClick={()=>setCreateTestForm(true)}>Create new test</button>
             <div>|</div>
-            <button onClick={()=>{navigate('mytests')}}>My Tests</button>
+            <button onClick={()=>{navigate('/mytests')}}>My Tests</button>
             <div>|</div>
             {!user && <button onClick={() => setRegisterForm(true)}>Register</button>}
             {!loading && user && <div>{user.data.email}</div>}

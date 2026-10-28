@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import HomePage from './pages/HomePage'
-import FeaturesPart from './Components/FeaturesPart'
-import {TeacherProvider} from './context/teacherContext.jsx'
 import { useAuth } from './context/teacherContext.jsx'
 import {Loader2} from 'lucide-react'
 import { Routes, Route } from 'react-router'
@@ -12,7 +10,7 @@ import CreateTest from './forms/CreateTest.jsx'
 import { TestProvider } from './context/testContext.jsx'
 import {Toaster} from 'react-hot-toast'
 function App() {
-  const {loginForm, setLoginForm, registerForm, setRegisterForm, createTestForm, setCreateTestForm} = useAuth()
+  const {loginForm, registerForm, createTestForm} = useAuth()
   return (
     
     <TestProvider>

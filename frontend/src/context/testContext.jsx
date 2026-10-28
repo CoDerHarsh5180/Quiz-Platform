@@ -1,5 +1,5 @@
 import { Children, createContext, useContext, useEffect, useState } from "react";
-import { getStructure } from "../Api/apirequests";
+import { getStructure } from "../Api/structureApi";
 import { useAuth } from "./teacherContext";
 
 const TestContext = createContext(null);
@@ -30,7 +30,6 @@ export const TestProvider = ({children})=>{
                 getStructure(t)
                 .then((res)=>setTestArray(prev=>[...prev, res]))
                 .then(()=>setLoading(false))
-                //.then(()=>console.log(testArray))
                 .catch(e=>console.log(e))
             })
         }

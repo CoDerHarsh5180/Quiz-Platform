@@ -1,8 +1,6 @@
 import React from 'react'
 import Navbar from '../Components/Navbar'
 import HeroSection from '../Components/HeroSection'
-import { showData } from '../Api/apirequests'
-import { useEffect } from 'react'
 import FeaturesPart from '../Components/FeaturesPart'
 
 function HomePage() {

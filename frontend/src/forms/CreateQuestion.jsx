@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { X } from 'lucide-react';
-import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css'; 
+import React, { useState, useEffect } from 'react';
+import { X, Hash, FileText, CheckCircle2 } from 'lucide-react';
 import { useTest } from '../context/testContext';
-import { createQuestion, createQuestionAI, getSection, getStructure } from '../Api/apirequests';
-
+import { createQuestion, createQuestionAI } from '../Api/questionApi';
+import { getSection, getStructure } from '../Api/structureApi';
+import ImageUploadWithCrop from '../Components/ImageUploadWithCrop';
 
 export default function CreateQuestion({ id, sec }) {
   const { setAddQues } = useTest();
@@ -16,55 +15,54 @@ export default function CreateQuestion({ id, sec }) {
   const [promptImg, setPromptImg] = useState(null);
   const [referenceImg, setReferenceImg] = useState(null);
 
-  const [text, setText] = useState('')
-  const [options, setOption]=useState(['', '', '', ''])
-  const [correctAnswer, setCorrectAnswer]=useState('')
-  const [subject, setSubject]=useState('')
-  const [type, setType] = useState('')
-  const [sectionArray, setSetionArray] = useState([])
-  const [subjects, setSubjects] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [text, setText] = useState('');
+  const [options, setOption] = useState(['', '', '', '']);
+  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [subject, setSubject] = useState('');
+  const [type, setType] = useState('MCQ');
+  const [sectionArray, setSetionArray] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     getStructure(id)
-      .then(res=>{
-        console.log(res.data)
-        setSetionArray(res.data.sections)
-        setSubjects(res.data.subjects)
+      .then((res) => {
+        if (res?.data) {
+          setSetionArray(res.data.sections || []);
+          setSubjects(res.data.subjects || []);
+        }
       })
-      .catch(e=>console.log(e))
-    getSection(section, id)
-          .then((data) => {
-            if (data.data[0] && String(data.data[0].testId) === id) {
-              setType(data.data[0].typeOfQues);
-              console.log(data.data[0])
-            }
-            console.log(data.data);
-          });
-  },[section])
+      .catch((e) => console.log(e));
 
-  useEffect(()=>{
-    console.log(optionImg)
-    console.log(sectionBImg)
-    console.log(promptImg)
-    console.log(referenceImg)
-  },[optionImg, sectionBImg, promptImg, referenceImg])
+    getSection(section, id)
+      .then((data) => {
+        if (data?.data?.[0] && String(data.data[0].testId) === id) {
+          setType(data.data[0].typeOfQues || 'MCQ');
+        }
+      })
+      .catch((e) => console.log(e));
+  }, [section, id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(mode==='manual'){
-      createQuestion(
-          text,
-          section,
-          options,
-          correctAnswer, 
-          subject,
-          id,
-          (type==='MCQ' || type==='MSQ')?optionImg:sectionBImg,
-          setLoading
-      )
-    }
+    setLoading(true);
 
-    else{
+    const isNoOption = type === 'NUMERICAL' || type === 'DESCRIPTIVE';
+    const isTF = type === 'TRUE/FALSE';
+    const submittedOptions = isNoOption ? [] : (isTF ? ['True', 'False'] : options);
+
+    if (mode === 'manual') {
+      createQuestion(
+        text,
+        section,
+        submittedOptions,
+        correctAnswer,
+        subject,
+        id,
+        type === 'MCQ' || type === 'MSQ' ? optionImg : sectionBImg,
+        setLoading
+      );
+    } else {
       createQuestionAI(
         promptImg,
         referenceImg,
@@ -72,69 +70,95 @@ export default function CreateQuestion({ id, sec }) {
         id,
         section,
         setLoading
-      )
+      );
     }
-
   };
+
+  const isNumerical = type === 'NUMERICAL';
+  const isDescriptive = type === 'DESCRIPTIVE';
+  const isTrueFalse = type === 'TRUE/FALSE';
+  const isMCQorMSQ = type === 'MCQ' || type === 'MSQ';
 
   return (
     <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md border border-gray-100 relative text-black">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Question</h2>
-      <span 
-        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700 z-10" 
-        onClick={() => { setAddQues(false); }}
+      <span
+        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700 z-10"
+        onClick={() => {
+          setAddQues(false);
+        }}
       >
         <X />
       </span>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 1. Section Dropdown */}
+        {/* 1. Section Dropdown with Type indicator */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Select Section</label>
-          <select 
-            value={section} 
+          <div className="flex justify-between items-center mb-2">
+            <label className="block text-sm font-semibold text-gray-700">Select Section</label>
+            <span
+              className={`text-xs px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 ${
+                isNumerical
+                  ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                  : isDescriptive
+                  ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                  : isTrueFalse
+                  ? 'bg-teal-100 text-teal-800 border border-teal-200'
+                  : 'bg-blue-100 text-blue-800 border border-blue-200'
+              }`}
+            >
+              {isNumerical && <Hash size={12} />}
+              {isDescriptive && <FileText size={12} />}
+              {isTrueFalse && <CheckCircle2 size={12} />}
+              Section Type: {type || 'MCQ'}
+            </span>
+          </div>
+          <select
+            value={section}
             onChange={(e) => setSection(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
           >
-            {
-              sectionArray.map((id, index)=>{
-                const secChar = String.fromCharCode(65 + index);
-                return(
-                  <option key={secChar} value={secChar}>
-                    Section {secChar}
-                  </option>
-                )
-              })
-            }
+            {sectionArray.map((_, index) => {
+              const secChar = String.fromCharCode(65 + index);
+              return (
+                <option key={secChar} value={secChar}>
+                  Section {secChar}
+                </option>
+              );
+            })}
           </select>
         </div>
 
         {/* 2. Mode Radio Buttons */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Input Type</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Input Mode</label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer group">
-              <input 
-                type="radio" 
-                name="mode" 
-                value="manual" 
+              <input
+                type="radio"
+                name="mode"
+                value="manual"
                 checked={mode === 'manual'}
                 onChange={() => setMode('manual')}
                 className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
               />
-              <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Manual</span>
+              <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">
+                Manual Entry
+              </span>
             </label>
-            
+
             <label className="flex items-center gap-2 cursor-pointer group">
-              <input 
-                type="radio" 
-                name="mode" 
-                value="prompt" 
+              <input
+                type="radio"
+                name="mode"
+                value="prompt"
                 checked={mode === 'prompt'}
                 onChange={() => setMode('prompt')}
                 className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
               />
-              <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">Prompt</span>
+              <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">
+                AI Prompt (OCR from Image)
+              </span>
             </label>
           </div>
         </div>
@@ -146,113 +170,197 @@ export default function CreateQuestion({ id, sec }) {
           <div key="manual-mode-wrapper" className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
-              <textarea 
-                placeholder="Enter your question in Latex form here..." 
+              <textarea
+                placeholder="Enter your question text (LaTeX supported: $E = mc^2$)..."
                 rows="3"
                 value={text}
-                onChange={(e)=>setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
               />
-            </div>
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-            <div>
-              <select 
-                value={subject}
-                onChange={(e)=>setSubject(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              >
-                <option value="">Select a Subject</option>
-                {subjects.map((subj) => (
-                  <option key={subj._id} value={subj._id} className='text-black text-lg bg-gray-200 hover:bg-gray-300'>
-                    {subj}
-                  </option>
-                ))}
-              </select>
-            </div>
             </div>
 
-            {type==='MCQ' || type==='MSQ' ? (
-              <div key="manual-section-a" className="space-y-3">
-                <label className="block text-sm font-semibold text-gray-700">Options</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {['option1', 'option2', 'option3', 'option4'].map((opt, idx) => (
-                    <input 
-                      key={idx}
-                      type="text" 
-                      placeholder={opt} 
-                      onChange={(e)=>setOption(prev=>{prev[idx]=e.target.value; return prev})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    />
-                  ))}
-                </div>
-                
-                <div className="mt-4">
-                  <ImageUploadWithCrop 
-                    label="Upload Option Image" 
-                    onCropped={setOptionImg} 
-                    currentImage={optionImg}
-                  />
-                </div>
-                
-              </div>
-            ) : (
-              <div key="manual-section-b">
-                <ImageUploadWithCrop 
-                  label="Upload Section B Image" 
-                  onCropped={setSectionBImg} 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+              <select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
+              >
+                <option value="">Select a Subject</option>
+                {subjects.map((subj, idx) => {
+                  const subjectName = typeof subj === 'object' ? subj?.name || subj?._id : subj;
+                  return (
+                    <option key={idx} value={subjectName}>
+                      {subjectName}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {/* A. NUMERICAL TYPE: Image + Numerical Value only. NO OPTIONS */}
+            {isNumerical && (
+              <div key="manual-numerical" className="space-y-4">
+                <ImageUploadWithCrop
+                  label="Upload Question Diagram / Image (optional)"
+                  onCropped={setSectionBImg}
                   currentImage={sectionBImg}
                 />
+                <div>
+                  <label className="block text-sm font-semibold text-purple-800 mb-1 flex items-center gap-1.5">
+                    <Hash size={14} /> Numerical Answer (Exact Value)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 42 or 3.14"
+                    value={correctAnswer}
+                    onChange={(e) => setCorrectAnswer(e.target.value)}
+                    className="w-full px-4 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono font-bold text-gray-800 outline-none"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Numerical sections do not have options. Students type the exact numerical answer.
+                  </p>
+                </div>
               </div>
             )}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Correct Answer</label>
-              <input 
-                placeholder="Correct Answer of the Question" 
-                value={correctAnswer}
-                onChange={(e)=>setCorrectAnswer(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-            </div>
+
+            {/* B. DESCRIPTIVE TYPE: Image + Expected Answer Textarea */}
+            {isDescriptive && (
+              <div key="manual-descriptive" className="space-y-4">
+                <ImageUploadWithCrop
+                  label="Upload Question Image (optional)"
+                  onCropped={setSectionBImg}
+                  currentImage={sectionBImg}
+                />
+                <div>
+                  <label className="block text-sm font-semibold text-amber-800 mb-1">
+                    Expected Answer / Key Evaluation Points
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Enter the expected answer, rubric, or solution..."
+                    value={correctAnswer}
+                    onChange={(e) => setCorrectAnswer(e.target.value)}
+                    className="w-full px-4 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* C. TRUE / FALSE TYPE: Select True or False */}
+            {isTrueFalse && (
+              <div key="manual-true-false" className="space-y-4">
+                <ImageUploadWithCrop
+                  label="Upload Question Image (optional)"
+                  onCropped={setSectionBImg}
+                  currentImage={sectionBImg}
+                />
+                <div>
+                  <label className="block text-sm font-semibold text-teal-800 mb-1">
+                    Correct Answer
+                  </label>
+                  <select
+                    value={correctAnswer}
+                    onChange={(e) => setCorrectAnswer(e.target.value)}
+                    className="w-full px-4 py-2 border border-teal-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-white font-medium"
+                    required
+                  >
+                    <option value="">Select True or False</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {/* D. MCQ & MSQ TYPE: 4 Options + Correct Answer */}
+            {isMCQorMSQ && (
+              <div key="manual-mcq-msq" className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Options</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {['Option A', 'Option B', 'Option C', 'Option D'].map((optLabel, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="font-bold text-gray-500 text-xs w-4">
+                          {String.fromCharCode(65 + idx)}.
+                        </span>
+                        <input
+                          type="text"
+                          placeholder={optLabel}
+                          value={options[idx] || ''}
+                          onChange={(e) =>
+                            setOption((prev) => {
+                              const updated = [...prev];
+                              updated[idx] = e.target.value;
+                              return updated;
+                            })
+                          }
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
+                          required
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <ImageUploadWithCrop
+                  label="Upload Question / Diagram Image (optional)"
+                  onCropped={setOptionImg}
+                  currentImage={optionImg}
+                />
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Correct Answer
+                  </label>
+                  <input
+                    placeholder="Must match the exact text of the correct option"
+                    value={correctAnswer}
+                    onChange={(e) => setCorrectAnswer(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    required
+                  />
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div key="prompt-mode-wrapper" className="space-y-4">
-            {/* <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-              <input 
-                placeholder="Subject" 
-                value={subject}
-                onChange={(e)=>setSubject(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-            </div> */}
             <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
             <div>
-              <select 
+              <select
                 value={subject}
-                onChange={(e)=>setSubject(e.target.value)}
+                onChange={(e) => setSubject(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
               >
                 <option value="">Select a Subject</option>
-                {subjects.map((subj) => (
-                  <option key={subj._id} value={subj._id} className='text-black text-lg bg-gray-200 hover:bg-gray-300'>
-                    {subj}
-                  </option>
-                ))}
+                {subjects.map((subj, idx) => {
+                  const subjectName = typeof subj === 'object' ? subj?.name || subj?._id : subj;
+                  return (
+                    <option key={idx} value={subjectName}>
+                      {subjectName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
             <div>
-              <ImageUploadWithCrop 
-                label="Prompt Image" 
-                onCropped={setPromptImg} 
+              <ImageUploadWithCrop
+                label="Prompt Image (Question snippet)"
+                onCropped={setPromptImg}
                 currentImage={promptImg}
               />
             </div>
-            
+
             <div>
-              <ImageUploadWithCrop 
-                label="Reference Image" 
-                onCropped={setReferenceImg} 
+              <ImageUploadWithCrop
+                label="Reference Image (Optional diagram / reference)"
+                onCropped={setReferenceImg}
                 currentImage={referenceImg}
               />
             </div>
@@ -260,158 +368,29 @@ export default function CreateQuestion({ id, sec }) {
         )}
 
         {/* Submit Button */}
-        <div className="pt-4 flex justify-between">
-          <button 
-            type="submit" 
-            className={(!loading && `w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer`) || (loading && `loader`)} 
-            onClick = {()=>{setLoading(true)}}
+        <div className="pt-4 flex justify-between gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50 ${
+              loading ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
           >
-            Submit Request
+            {loading ? 'Creating Question...' : 'Submit Question'}
           </button>
-          {loading && <button className='max-w-1/2 p-2 bg-red-500 text-white' onClick={()=>{setLoading(false)}}>Retry!</button>}
+          {loading && (
+            <button
+              type="button"
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium"
+              onClick={() => {
+                setLoading(false);
+              }}
+            >
+              Cancel
+            </button>
+          )}
         </div>
       </form>
     </div>
   );
-}
-
-// --- FREE-FORM CROPPER DRAG SELECTION COMPONENT ---
-
-function ImageUploadWithCrop({ label, onCropped, currentImage }) {
-  const [imageSrc, setImageSrc] = useState(null);
-  const [crop, setCrop] = useState();
-  const [completedCrop, setCompletedCrop] = useState(null);
-  const imgRef = useRef(null);
-
-  const onFileChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => setImageSrc(reader.result));
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-
-  // Automatically initialises a clean initial cropping rectangle selection
-  function onImageLoad(e) {
-    imgRef.current = e.currentTarget;
-    const { width, height } = e.currentTarget;
-    
-    // Default select a generic landscape rect in the center
-    const initialCrop = centerCrop(
-      makeAspectCrop({ unit: '%', width: 80 }, null, width, height),
-      width,
-      height
-    );
-    setCrop(initialCrop);
-    setCompletedCrop(initialCrop);
-  }
-
-  const handleSaveCrop = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (imgRef.current && completedCrop) {
-      const croppedBase64 = getCroppedImg(imgRef.current, completedCrop);
-      onCropped(croppedBase64);
-      setImageSrc(null);
-    }
-  };
-
-  return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <input 
-        type="file" 
-        accept="image/*"
-        onChange={onFileChange}
-        onClick={(e) => { e.target.value = null; }}
-        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-5 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-      />
-
-      {currentImage && (
-        <div className="mt-2 relative inline-block max-w-full">
-          <img src={currentImage} alt="Cropped" className="max-h-28 w-auto rounded-lg border border-gray-200 object-contain" />
-          <button 
-            type="button"
-            onClick={() => onCropped(null)} 
-            className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 shadow-sm"
-          >
-            <X size={12} />
-          </button>
-        </div>
-      )}
-
-      {imageSrc && (
-        <div className="fixed inset-0 z-[200] bg-black/80 flex flex-col items-center justify-center p-4">
-          <div className="bg-white w-full max-w-2xl rounded-xl p-4 flex flex-col gap-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-            <h3 className="text-lg font-bold text-gray-800">Drag to Select Question Area</h3>
-            
-            <div className="flex justify-center bg-gray-100 p-2 rounded-lg max-h-96 overflow-auto border border-gray-200">
-              {/* Native handles are rendered natively via CSS injection */}
-              <ReactCrop
-                crop={crop}
-                onChange={(c) => setCrop(c)}
-                onComplete={(c) => setCompletedCrop(c)}
-              >
-                <img 
-                  src={imageSrc} 
-                  alt="Crop Workspace" 
-                  onLoad={onImageLoad}
-                  className="max-w-full h-auto max-h-80 object-contain"
-                />
-              </ReactCrop>
-            </div>
-
-            <div className="flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={(e) => { e.preventDefault(); setImageSrc(null); }}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveCrop}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm"
-              >
-                Crop & Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// --- HIGHLY ACCURATE ELEMENT DIMENSION EXTRACTION ---
-
-function getCroppedImg(image, crop) {
-  const canvas = document.createElement('canvas');
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
-  
-  canvas.width = crop.width * scaleX;
-  canvas.height = crop.height * scaleY;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return null;
-
-  // Set high quality image rendering paths
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
-
-  ctx.drawImage(
-    image,
-    crop.x * scaleX,
-    crop.y * scaleY,
-    crop.width * scaleX,
-    crop.height * scaleY,
-    0,
-    0,
-    crop.width * scaleX,
-    crop.height * scaleY
-  );
-
-  return canvas.toDataURL('image/jpeg', 0.95);
 }

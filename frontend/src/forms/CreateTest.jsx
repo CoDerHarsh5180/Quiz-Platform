@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {X} from 'lucide-react'
 import { useAuth } from '../context/teacherContext'
-import { createStructure } from '../Api/apirequests';
+import { createStructure } from '../Api/structureApi';
 function CreateTest() {
     const { setCreateTestForm, user} = useAuth();
     const [name, setName] = useState('');

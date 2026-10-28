@@ -1,7 +1,7 @@
 import {Router} from "express"
 const testRouter = Router()
 import { upload } from "../middleware/multer.middleware.js"
-import { createStructure, createSection, createQuestion, getStructure , generateQuesImg, getSection, getQuestions} from "../controllers/testPaper.controller.js"
+import { createStructure, createSection, createQuestion, getStructure , generateQuesImg, getSection, getQuestions, editQuestion} from "../controllers/testPaper.controller.js"
 import { verifyJWT } from "../middleware/auth.middleware.js"    
 testRouter.route("/createStructure").post(verifyJWT, createStructure)
 testRouter.route("/createSection").post(verifyJWT, createSection)
@@ -14,6 +14,12 @@ testRouter.route("/createQuestion").post(verifyJWT, upload.fields([
 testRouter.route("/getSection").post(verifyJWT, getSection)
 testRouter.route("/getQuestions").post(verifyJWT, getQuestions)
 testRouter.route("/getStructure").post(verifyJWT, getStructure)
+testRouter.route("/editQuestion").put(verifyJWT, upload.fields([
+    {
+        name:"image",
+        maxCount:1
+    }
+]), editQuestion)
 testRouter.route("/createQuesUsingAI").post(verifyJWT,  upload.fields([
     {
         name:"image",
@@ -24,4 +30,4 @@ testRouter.route("/createQuesUsingAI").post(verifyJWT,  upload.fields([
         maxCount:1
     }
 ]), generateQuesImg)
-export default testRouter
+export default testRouter
