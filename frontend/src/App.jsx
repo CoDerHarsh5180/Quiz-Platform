@@ -9,6 +9,7 @@ import RegisterPage from './forms/Register.jsx'
 import CreateTest from './forms/CreateTest.jsx'
 import { TestProvider } from './context/testContext.jsx'
 import {Toaster} from 'react-hot-toast'
+
 function App() {
   const {loginForm, registerForm, createTestForm} = useAuth()
   return (
@@ -29,6 +30,7 @@ function App() {
             {createTestForm && <div className='fixed inset-0 w-full h-screen bg-black/50 flex items-center justify-center z-50'>
               <CreateTest />
             </div>}
+           
         
       </div>
       

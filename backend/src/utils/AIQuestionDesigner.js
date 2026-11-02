@@ -86,7 +86,7 @@ const generateQues = async(imageUrl, type)=>{
         console.log("Image Converted")
        
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-3.5-flash',
             contents: [
                 imagePart,
                 effectivePrompt

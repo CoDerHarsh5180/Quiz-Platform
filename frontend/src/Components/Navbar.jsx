@@ -12,12 +12,18 @@ function Navbar() {
   const navigate = useNavigate()
   const {user, loading} = useAuth();
   const [menuOpen, setMenuOpen] = useState(false)
-  const {loginForm, setLoginForm, registerForm, setRegisterForm, createTestForm, setCreateTestForm} = useAuth()
+  const {setLoginForm, setRegisterForm, setCreateTestForm} = useAuth()
   const handleLoginClick = ()=>{
     setLoginForm(true)
   }
   const cancelLogin = ()=>{
     setLoginForm(false)
+  }
+  function handleTestFormForRegisteredUser() {
+    if(!user){
+      setLoginForm(true)
+    }
+    else setCreateTestForm(true)
   }
   return (
     <div className='flex justify-between p-5 lg:p-10 items-center bg-black/20 z-40 w-full'>
@@ -25,7 +31,7 @@ function Navbar() {
         <div className='text-white hidden gap-2 p-5 md:flex'>
             <button onClick={()=>{navigate('/')}}>Home</button>
             <div>|</div>
-            <button onClick={()=>setCreateTestForm(true)}>Create new test</button>
+            <button onClick={handleTestFormForRegisteredUser}>Create new test</button>
             <div>|</div>
             <button onClick={()=>{navigate('/mytests')}}>My Tests</button>
             <div>|</div>
@@ -42,7 +48,7 @@ function Navbar() {
         
             <button  onClick={()=>{navigate('/')}}>Home</button>
             <hr />
-            <button onClick={()=>setCreateTestForm(true)}>Create New Test</button>
+            <button onClick={handleTestFormForRegisteredUser}>Create New Test</button>
             <hr />
             <button onClick={()=>{navigate('mytests')}}>My Tests</button>
             <hr />
