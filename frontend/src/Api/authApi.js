@@ -12,17 +12,18 @@ const registerUser = async(name, email, username, experience, field, password)=>
             experience, 
             field, 
             password
-        }, {withCredentials:true});
+        });
         console.log(response.data);
+        toast.success("OTP Sent Successfully! Check your email.");
         return response.data;
     }catch(e){
-        console.log(e)
-        toast.error("Some Error Occured")
+        console.log(e);
+        toast.error("Some Error Occurred");
         throw new Error('Failed to register');
     }
 }
 
-const verifyOTP = async(name,email, username, experience, field, password, otp)=>{
+const verifyOTP = async(name, email, username, experience, field, password, otp)=>{
     try {
         const response = await axiosInstance.post('/register/otp', {
             name, 
@@ -32,28 +33,32 @@ const verifyOTP = async(name,email, username, experience, field, password, otp)=
             field, 
             password, 
             otp
-        }, {withCredentials:true});
+        });
         console.log(response.data);
+        toast.success("Account created successfully! Please login.");
         return response.data;
     }catch(e){
-        toast.error("Incorrect OTP")
+        toast.error("Incorrect OTP");
         throw new Error('Failed to verify OTP');
     }
 }
 
 const loginUser = async(identifier, password)=>{
+    console.log("Login API called with identifier:", identifier, "and password:", password);
     try {
         const response = await axiosInstance.post('/login', {
             username: identifier, 
             email: identifier, 
             password
-        }, {withCredentials:true});
+        });
         console.log(response.data);
-        window.location.reload();
-        toast.success("Logged In Successfully")
+        toast.success("Logged In Successfully");
+        setTimeout(() => window.location.reload(), 800);
         return response.data;
     }catch(e){
-        toast.error("Failed to Login")
+        toast.error("Failed to Login");
+        console.log(`Error: ${e}`);
+
         throw new Error('Failed to login');
     }
 }
@@ -61,20 +66,20 @@ const loginUser = async(identifier, password)=>{
 
 const logoutUser = async()=>{
     try{
-        const response = await axiosInstance.post('/logout', {}, {withCredentials:true});
-        window.location.reload();
+        const response = await axiosInstance.post('/logout', {});
         console.log(response.data);
-        toast.success("Logged Out Successfully")
+        toast.success("Logged Out Successfully");
+        setTimeout(() => window.location.reload(), 800);
         return response.data;
     }catch(e){
-        toast.error("Request Failed")
+        toast.error("Request Failed");
         throw new Error('Failed to logout');
     }
 }
 
 const showData = async()=>{
     try{
-        const response = await axiosInstance.get('/show', {withCredentials:true});
+        const response = await axiosInstance.get('/show');
         console.log(response.data);
         return response.data;
     }catch(e){

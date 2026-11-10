@@ -84,7 +84,7 @@ const sectionCreate = asyncHandler(async(req, res)=>{
             }
             else{
                 console.log("This Section is Not Defined in the Structure")
-                throw ApiError(404, "This Section is Not Defined in the Structure")
+                throw new ApiError(404, "This Section is Not Defined in the Structure")
             }
         }
         section[0].plusMarks=plusMarks
@@ -308,4 +308,4 @@ const editQuestion = asyncHandler(async(req, res)=>{
 })
 
 
-export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection, getQuestions, editQuestion}
+export {createStructure, sectionCreate as createSection, createQuestion, getStructure, generateQuesImg, getSection, getQuestions, editQuestion}

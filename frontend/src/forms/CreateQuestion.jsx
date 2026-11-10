@@ -43,6 +43,11 @@ export default function CreateQuestion({ id, sec }) {
       .catch((e) => console.log(e));
   }, [section, id]);
 
+  // Reset correctAnswer whenever type or section changes
+  useEffect(() => {
+    setCorrectAnswer('');
+  }, [type, section]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -227,7 +232,7 @@ export default function CreateQuestion({ id, sec }) {
               </div>
             )}
 
-            {/* B. DESCRIPTIVE TYPE: Image + Expected Answer Textarea */}
+            {/* B. DESCRIPTIVE TYPE: Image only — no correct answer needed (AI-verified) */}
             {isDescriptive && (
               <div key="manual-descriptive" className="space-y-4">
                 <ImageUploadWithCrop
@@ -235,18 +240,11 @@ export default function CreateQuestion({ id, sec }) {
                   onCropped={setSectionBImg}
                   currentImage={sectionBImg}
                 />
-                <div>
-                  <label className="block text-sm font-semibold text-amber-800 mb-1">
-                    Expected Answer / Key Evaluation Points
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Enter the expected answer, rubric, or solution..."
-                    value={correctAnswer}
-                    onChange={(e) => setCorrectAnswer(e.target.value)}
-                    className="w-full px-4 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
-                    required
-                  />
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 flex items-start gap-2">
+                  <FileText size={16} className="shrink-0 mt-0.5 text-amber-600" />
+                  <span>
+                    Descriptive answers are verified by AI. No correct answer key is needed here.
+                  </span>
                 </div>
               </div>
             )}
@@ -277,34 +275,91 @@ export default function CreateQuestion({ id, sec }) {
               </div>
             )}
 
-            {/* D. MCQ & MSQ TYPE: 4 Options + Correct Answer */}
+            {/* D. MCQ & MSQ TYPE: 4 Options inline with correct-answer selector */}
             {isMCQorMSQ && (
               <div key="manual-mcq-msq" className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Options</label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {['Option A', 'Option B', 'Option C', 'Option D'].map((optLabel, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <span className="font-bold text-gray-500 text-xs w-4">
-                          {String.fromCharCode(65 + idx)}.
-                        </span>
-                        <input
-                          type="text"
-                          placeholder={optLabel}
-                          value={options[idx] || ''}
-                          onChange={(e) =>
-                            setOption((prev) => {
-                              const updated = [...prev];
-                              updated[idx] = e.target.value;
-                              return updated;
-                            })
-                          }
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
-                          required
-                        />
-                      </div>
-                    ))}
+                  <div className="flex items-baseline justify-between mb-2">
+                    <label className="block text-sm font-semibold text-gray-700">Options</label>
+                    <span className="text-xs text-gray-400">
+                      {type === 'MCQ' ? '— tick the correct answer' : '— tick all correct answers'}
+                    </span>
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {['Option A', 'Option B', 'Option C', 'Option D'].map((optLabel, idx) => {
+                      const opt = options[idx] || '';
+                      const isMCQChecked = type === 'MCQ' && correctAnswer === opt;
+                      const selectedArr = type === 'MSQ' && correctAnswer ? correctAnswer.split(',') : [];
+                      const isMSQChecked = type === 'MSQ' && opt && selectedArr.includes(opt);
+                      const isSelected = isMCQChecked || isMSQChecked;
+                      return (
+                        <div
+                          key={idx}
+                          className={`flex items-center gap-2 border rounded-lg px-2 py-1 transition-colors ${
+                            isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-200'
+                          }`}
+                        >
+                          {/* Radio (MCQ) or Checkbox (MSQ) */}
+                          <input
+                            type={type === 'MCQ' ? 'radio' : 'checkbox'}
+                            name="correctAnswer"
+                            value={opt}
+                            checked={!!isSelected}
+                            onChange={() => {
+                              if (!opt) return;
+                              if (type === 'MCQ') {
+                                setCorrectAnswer(opt);
+                              } else {
+                                let arr = correctAnswer ? correctAnswer.split(',') : [];
+                                if (isMSQChecked) arr = arr.filter((a) => a !== opt);
+                                else arr.push(opt);
+                                setCorrectAnswer(arr.filter(Boolean).join(','));
+                              }
+                            }}
+                            disabled={!opt}
+                            className={`w-4 h-4 shrink-0 text-blue-600 border-gray-300 focus:ring-blue-500 ${type === 'MSQ' ? 'rounded' : ''}`}
+                          />
+                          <span className="font-bold text-gray-500 text-xs w-4 shrink-0">
+                            {String.fromCharCode(65 + idx)}.
+                          </span>
+                          <input
+                            type="text"
+                            placeholder={optLabel}
+                            value={opt}
+                            onChange={(e) => {
+                              const newVal = e.target.value;
+                              const oldVal = options[idx] || '';
+                              setOption((prev) => {
+                                const updated = [...prev];
+                                updated[idx] = newVal;
+                                return updated;
+                              });
+                              // Keep correctAnswer in sync when option text is edited
+                              if (type === 'MCQ' && correctAnswer === oldVal) {
+                                setCorrectAnswer(newVal);
+                              } else if (type === 'MSQ') {
+                                setCorrectAnswer((prev) => {
+                                  const arr = prev ? prev.split(',') : [];
+                                  const i = arr.indexOf(oldVal);
+                                  if (i !== -1) arr[i] = newVal;
+                                  return arr.filter(Boolean).join(',');
+                                });
+                              }
+                            }}
+                            className="w-full px-3 py-2 bg-transparent border-none outline-none text-sm"
+                            required
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {!correctAnswer && (
+                    <p className="text-xs text-red-500 mt-1.5">
+                      {type === 'MCQ'
+                        ? 'Please tick the correct answer.'
+                        : 'Please tick at least one correct answer.'}
+                    </p>
+                  )}
                 </div>
 
                 <ImageUploadWithCrop
@@ -312,19 +367,6 @@ export default function CreateQuestion({ id, sec }) {
                   onCropped={setOptionImg}
                   currentImage={optionImg}
                 />
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Correct Answer
-                  </label>
-                  <input
-                    placeholder="Must match the exact text of the correct option"
-                    value={correctAnswer}
-                    onChange={(e) => setCorrectAnswer(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    required
-                  />
-                </div>
               </div>
             )}
           </div>

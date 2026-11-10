@@ -14,13 +14,17 @@ export const TeacherProvider = ({ children }) => {
 
 
     useEffect(() => {
-        showData().then((data) => {
-            setUser(data);
-            setLoading(false);
-        }).catch((e) => {
-            console.log("Can't fetch data");
-            setLoading(false);
-        });
+        showData()
+            .then((data) => {
+                setUser(data?.data || data);   // handle both {data:{...}} and raw object
+                setLoading(false);
+            })
+            .catch((e) => {
+                // Not logged in, or backend unreachable — that's fine, show the app anyway
+                console.log("Auth check:", e.message || "Not authenticated");
+                setUser(null);
+                setLoading(false);
+            });
     }, []);
 
     return (

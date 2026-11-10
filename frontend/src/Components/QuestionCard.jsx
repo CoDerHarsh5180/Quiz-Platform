@@ -147,47 +147,128 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Subject
+                        </label>
+                        {subjects && subjects.length > 0 ? (
+                            <select
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+                            >
+                                <option value="">Select Subject</option>
+                                {subjects.map((s, idx) => (
+                                    <option key={idx} value={s}>
+                                        {s}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <input
+                                type="text"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                placeholder="Subject name"
+                                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            />
+                        )}
+                    </div>
+
+                    {/* Options list with inline correct-answer selector: ONLY for MCQ and MSQ */}
+                    {(isMCQ || isMSQ) && (
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Subject
-                            </label>
-                            {subjects && subjects.length > 0 ? (
-                                <select
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
-                                >
-                                    <option value="">Select Subject</option>
-                                    {subjects.map((s, idx) => (
-                                        <option key={idx} value={s}>
-                                            {s}
-                                        </option>
-                                    ))}
-                                </select>
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    placeholder="Subject name"
-                                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                />
+                            <div className="flex items-baseline justify-between mb-1">
+                                <label className="block text-sm font-semibold text-gray-700">
+                                    Options
+                                </label>
+                                <span className="text-xs text-gray-400">
+                                    {isMCQ ? '— tick the correct answer' : '— tick all correct answers'}
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {options.map((opt, idx) => {
+                                    const isMCQChecked = isMCQ && correctAnswer === opt;
+                                    const selectedArr = isMSQ && correctAnswer ? correctAnswer.split(',') : [];
+                                    const isMSQChecked = isMSQ && opt && selectedArr.includes(opt);
+                                    const isSelected = isMCQChecked || isMSQChecked;
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className={`flex items-center gap-2 border rounded-lg px-2 py-1 transition-colors ${
+                                                isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-300'
+                                            }`}
+                                        >
+                                            <input
+                                                type={isMCQ ? 'radio' : 'checkbox'}
+                                                name="correctAnswerEdit"
+                                                value={opt}
+                                                checked={!!isSelected}
+                                                onChange={() => {
+                                                    if (!opt) return;
+                                                    if (isMCQ) {
+                                                        setCorrectAnswer(opt);
+                                                    } else {
+                                                        let arr = correctAnswer ? correctAnswer.split(',') : [];
+                                                        if (isMSQChecked) arr = arr.filter((a) => a !== opt);
+                                                        else arr.push(opt);
+                                                        setCorrectAnswer(arr.filter(Boolean).join(','));
+                                                    }
+                                                }}
+                                                disabled={!opt}
+                                                className={`w-4 h-4 shrink-0 text-blue-600 border-gray-300 focus:ring-blue-500 ${isMSQ ? 'rounded' : ''}`}
+                                            />
+                                            <span className="text-xs font-bold text-gray-500 w-5 shrink-0">
+                                                {String.fromCharCode(65 + idx)}.
+                                            </span>
+                                            <input
+                                                type="text"
+                                                value={opt}
+                                                onChange={(e) => {
+                                                    const newVal = e.target.value;
+                                                    const oldVal = options[idx];
+                                                    const updated = [...options];
+                                                    updated[idx] = newVal;
+                                                    setOptions(updated);
+                                                    // Keep correctAnswer in sync
+                                                    if (isMCQ && correctAnswer === oldVal) {
+                                                        setCorrectAnswer(newVal);
+                                                    } else if (isMSQ) {
+                                                        setCorrectAnswer((prev) => {
+                                                            const arr = prev ? prev.split(',') : [];
+                                                            const i = arr.indexOf(oldVal);
+                                                            if (i !== -1) arr[i] = newVal;
+                                                            return arr.filter(Boolean).join(',');
+                                                        });
+                                                    }
+                                                }}
+                                                placeholder={`Option ${idx + 1}`}
+                                                className="w-full px-2 py-1 bg-transparent border-none outline-none text-sm"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            {!correctAnswer && (
+                                <p className="text-xs text-red-500 mt-1.5">
+                                    {isMCQ
+                                        ? 'Please tick the correct answer.'
+                                        : 'Please tick at least one correct answer.'}
+                                </p>
                             )}
                         </div>
+                    )}
 
-                        {/* Answer Input based on type */}
+                    {/* Answer Input for non-MCQ/MSQ types only */}
+                    {(isTrueFalse || isNumerical || isDescriptive) && (
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-1">
                                 {isNumerical
                                     ? 'Numerical Value Answer'
                                     : isDescriptive
                                     ? 'Expected Key Points / Answer'
-                                    : isTrueFalse
-                                    ? 'Correct Answer (True or False)'
-                                    : 'Correct Answer'}
+                                    : 'Correct Answer (True or False)'}
                             </label>
-
                             {isTrueFalse ? (
                                 <select
                                     value={correctAnswer}
@@ -208,7 +289,7 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
                                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono font-semibold"
                                     required
                                 />
-                            ) : isDescriptive ? (
+                            ) : (
                                 <textarea
                                     rows={2}
                                     value={correctAnswer}
@@ -217,45 +298,7 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
                                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                     required
                                 />
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={correctAnswer}
-                                    onChange={(e) => setCorrectAnswer(e.target.value)}
-                                    placeholder="Exact correct answer"
-                                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                    required
-                                />
                             )}
-                        </div>
-                    </div>
-
-                    {/* Options list: ONLY for MCQ and MSQ. NEVER for NUMERICAL or DESCRIPTIVE */}
-                    {(isMCQ || isMSQ) && (
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Options
-                            </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {options.map((opt, idx) => (
-                                    <div key={idx} className="flex items-center gap-2">
-                                        <span className="text-xs font-bold text-gray-500 w-5">
-                                            {String.fromCharCode(65 + idx)}.
-                                        </span>
-                                        <input
-                                            type="text"
-                                            value={opt}
-                                            onChange={(e) => {
-                                                const updated = [...options];
-                                                updated[idx] = e.target.value;
-                                                setOptions(updated);
-                                            }}
-                                            placeholder={`Option ${idx + 1}`}
-                                            className="w-full px-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     )}
 
@@ -358,11 +401,8 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
             {isDescriptive && (
                 <div className="p-3 bg-amber-950/40 border border-amber-600/50 rounded-xl text-sm space-y-1.5">
                     <span className="font-semibold text-amber-300 flex items-center gap-1.5">
-                        <FileText size={14} /> Expected Answer / Key Points:
+                        <FileText size={14} /> AI-Verified — no answer key shown
                     </span>
-                    <div className="text-gray-200 whitespace-pre-wrap leading-relaxed">
-                        {question.correctAnswer || 'Not set'}
-                    </div>
                 </div>
             )}
 
@@ -394,7 +434,13 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
                     {question.options
                         .filter((opt) => opt && String(opt).trim() !== '')
                         .map((opt, idx) => {
-                            const isCorrect = String(opt).trim() === String(question.correctAnswer).trim();
+                            // For MSQ, correctAnswer is comma-separated; for MCQ it's a single string
+                            const correctArr = question.correctAnswer
+                                ? question.correctAnswer.split(',').map((s) => s.trim())
+                                : [];
+                            const isCorrect = isMSQ
+                                ? correctArr.includes(String(opt).trim())
+                                : String(opt).trim() === String(question.correctAnswer).trim();
                             return (
                                 <div
                                     key={idx}
@@ -422,7 +468,9 @@ function QuestionCard({ question, sectionType = 'MCQ', sectionName = '', subject
             {/* Correct Answer line for MCQ/MSQ */}
             {(isMCQ || isMSQ) && question.correctAnswer && (
                 <div className="text-xs text-gray-400 flex items-center gap-1.5 pt-1 border-t border-gray-700/60">
-                    <span className="font-semibold text-gray-300">Correct Answer:</span>
+                    <span className="font-semibold text-gray-300">
+                        {isMSQ ? 'Correct Answers:' : 'Correct Answer:'}
+                    </span>
                     <span className="text-emerald-300 font-medium">{question.correctAnswer}</span>
                 </div>
             )}

@@ -10,7 +10,7 @@ dotenv.config({
 const app = express()
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: 'http://localhost:5173',
     credentials: true
 }))
 
@@ -22,8 +22,10 @@ app.use(cookieParser())
 
 export {app}
 
-import router from "./router/userRouter.routes.js"
-import testRouter from "./router/createQuiz.routes.js"
+import router        from "./router/userRouter.routes.js"
+import testRouter    from "./router/createQuiz.routes.js"
+import studentRouter from "./router/student-routes/student.routes.js"
 
 app.use("/api/v1/test/", testRouter)
 app.use("/api/v1/", router)
+app.use("/api/v1/student/", studentRouter)

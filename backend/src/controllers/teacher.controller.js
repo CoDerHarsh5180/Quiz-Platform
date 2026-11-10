@@ -27,8 +27,8 @@ const generateAccessAndRefreshTokens = async(userId)=>{
         await user.save({validateBeforeSave:false})
         return {AccessToken, refreshToken}
     }
-    catch{
-        throw new ApiError(400, "Error while creating tokens")
+    catch(e){
+        throw new ApiError(400,` ${e?.message || "Error Generating Tokens"}`)
     }
 }
 
@@ -40,7 +40,7 @@ const userRegister = asyncHandler(async(req, res)=>{
         throw new ApiError(500, "All fields are compulsory")
     }
     const existedUser = await Teacher.findOne({
-        $or:[{username, email}]
+        $or:[{username}, {email}]
     })
     if(existedUser) {
         throw new ApiError(404, "User Already Registered")
@@ -52,8 +52,8 @@ const userRegister = asyncHandler(async(req, res)=>{
         otp:otp,
         email:email
     })    
-    return res.status(200).json(new ApiResponse(200, otp1, "User Created Successfully"))
-    
+    return res.status(200).json(new ApiResponse(200, {}, "User Created Successfully"))
+    //No need to send otp in response as it is sent to the email of the user, and verified ny backend only
 })
 
 const otpGenerator=()=>{
@@ -69,16 +69,13 @@ const otpGenerator=()=>{
 
 const verifyUser = asyncHandler(async(req, res)=>{
     const {name, username, email, password, experience, field, otp} = req.body
-    const user1 =await Otp.find({   
-        email:email
-    })
-    console.log(req.body)
     if(!email){
         throw new ApiError(501, "User not found")
     }
-    console.log(password)
-    console.log((otp))
-    console.log((user1[user1.length-1].otp))
+    const user1 =await Otp.find({   
+        email:email
+    })
+    
     if((user1[user1.length-1].otp).trim() === otp.trim()){
         console.log("Otp Verified")
         const user = await Teacher.create({
@@ -90,8 +87,10 @@ const verifyUser = asyncHandler(async(req, res)=>{
             field:field
         })
         console.log(user)
+        const registeredUser = user.toObject()
+        delete registeredUser.password
         res.status(200).json(
-            new ApiResponse(200, user, "Registered Successfully")
+            new ApiResponse(200, registeredUser, "Registered Successfully")
         )
     }
     else{
@@ -110,7 +109,7 @@ const Login = asyncHandler(async(req, res)=>{
     }
     const user = await Teacher.findOne({
         $or:[{email}, {username}]
-    })
+    }).select("+password")
     if(!user){
         console.log("User Doesn't Exist")
         throw new ApiError(404, "User Doesn't Exist")
@@ -120,20 +119,25 @@ const Login = asyncHandler(async(req, res)=>{
     console.log(IsPasswordValid)
     if(!IsPasswordValid){
         console.log("Incorrect Password")
-        throw  new ApiError("404", "Invalid Credentials")
+        throw  new ApiError(404, "Invalid Credentials")
     }
     console.log("Login Successfull")
     const {AccessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id)
     const option={
         httpOnly:true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+        , maxAge: 1000 * 60 * 60 * 24 * 1
     }
+    const loggedInUser = user.toObject()
+    delete loggedInUser.password
+    delete loggedInUser.refreshToken
+
     res.status(200)
     .cookie("refreshToken", refreshToken, option)
     .cookie("accessToken", AccessToken, option)
     .json(
-        new ApiResponse(200, user, "Logged In Successfully")
+        new ApiResponse(200, loggedInUser, "Logged In Successfully")
     )
 })
 
@@ -179,7 +183,8 @@ const refreshAccessToken = asyncHandler(async(req, res)=>{
         const option = {
             httpOnly:true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            maxAge: 1000 * 60 * 60 * 24 * 1
         }
     
         const {AccessToken, refreshToken}=await generateAccessAndRefreshTokens(user._id)
@@ -202,12 +207,6 @@ const refreshAccessToken = asyncHandler(async(req, res)=>{
 
 
 const getProfile = asyncHandler(async(req, res)=>{
-    if(!req.cookies.accessToken){
-        throw new ApiError(401, "Unauthorized Request")
-    }
-    if(!req.user){
-        throw new ApiError(401, "Unauthorized Request")
-    }
     const user = await Teacher.findById(req.user._id)
     if(!user){
         throw new ApiError(404, "User Not Found")
@@ -220,15 +219,14 @@ const getProfile = asyncHandler(async(req, res)=>{
 const logout = asyncHandler(async(req, res)=>{
     const user = await Teacher.findById(req.user._id)
     if(!user){
-        throw new ApiError(404, "User Not Found")
+        throw new ApiError(404, "User Not Found, so no need to logout")
     }
     user.refreshToken = null
     await user.save({validateBeforeSave:false})
 
     const option = {
         httpOnly:true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        secure: true
     }
     res.status(200)
     .clearCookie("refreshToken", option)

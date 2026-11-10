@@ -1,71 +1,84 @@
 import React from 'react'
-import {useAuth} from '../context/teacherContext.jsx'
+import { useAuth } from '../context/teacherContext.jsx'
 import Navbar from '../Components/Navbar.jsx'
 import { useTest } from '../context/testContext.jsx'
 import TestItem from '../Components/TestItem.jsx'
+import { Loader2 } from 'lucide-react'
 
 function MyTests() {
-    const {testArray, loading1} = useTest()
-    
-    if(!loading1) console.log(testArray)
-    const {user, loading, setLoginForm, setCreateTestForm} = useAuth()
-    // console.log(typeof(user?.data?.tests))
-    if(!user){
-        return(
+    const { testArray, loading1 } = useTest()
+    const { user, loading, setLoginForm, setCreateTestForm } = useAuth()
+
+    if (loading) {
+        return (
+            <div className='bg-gray-900 text-white min-h-screen flex items-center justify-center'>
+                <Loader2 className='animate-spin text-orange-200' size={40} />
+            </div>
+        )
+    }
+
+    if (!user) {
+        return (
             <div className='bg-gray-900 text-white'>
                 <Navbar />
-                <div className='flex items-center justify-center h-screen flex-col'>
+                <div className='flex items-center justify-center h-screen flex-col gap-4'>
                     <h1 className='text-2xl font-bold'>Please Login to view your tests</h1>
-                    <br />
-                    <button 
-                        onClick={()=>{setLoginForm(true)}}
-                        className='p-2 bg-orange-200 text-black font-bold rounded'
-                    >Login Now</button>
+                    <button
+                        onClick={() => setLoginForm(true)}
+                        className='p-2 px-5 bg-orange-200 text-black font-bold rounded hover:bg-orange-300 transition'
+                    >
+                        Login Now
+                    </button>
                 </div>
             </div>
-            
         )
     }
-    if(!user?.data?.tests){
-        
-        return(
+
+    if (!user?.tests?.length) {
+        return (
             <div className='bg-gray-900 text-white'>
                 <Navbar />
-                <div className='flex items-center justify-center h-screen flex-col'>
+                <div className='flex items-center justify-center h-screen flex-col gap-4'>
                     <h1 className='text-2xl font-bold'>NO TESTS FOUND</h1>
-                    <h3>Create your first test now</h3>
-                    <br />
-                    <button 
-                        onClick={()=>{setCreateTestForm(true)}}
-                        className='p-2 bg-orange-200 text-black font-bold rounded'
-                    >Create New Test</button>
+                    <h3 className='text-gray-400'>Create your first test now</h3>
+                    <button
+                        onClick={() => setCreateTestForm(true)}
+                        className='p-2 px-5 bg-orange-200 text-black font-bold rounded hover:bg-orange-300 transition'
+                    >
+                        Create New Test
+                    </button>
                 </div>
             </div>
         )
     }
 
-    
-  return (
-    
-    <div className='bg-gray-900 text-white '>
-       <Navbar />
-       <div className='px-10 py-4 space-y-4  bg-gray-800 rounded min-h-screen w-full flex flex-col items-center'>
-        {!loading1 &&
-           testArray.map((t)=>{
-            console.log(t)
-                return( 
-                    <div className=' lg:w-2/3 md:w-4/5 w-full'>
-                        <TestItem id={t.data._id} name={t.data.name} totalMarks={t.data.totalMarks} timeDuration={t.data.timeDuration} noOfSec={t.data.noOfSec} isSection={(t.data.sections.length>0)}/>
+    return (
+        <div className='bg-gray-900 text-white'>
+            <Navbar />
+            <div className='px-10 py-4 space-y-4 bg-gray-800 rounded min-h-screen w-full flex flex-col items-center'>
+                {loading1 ? (
+                    <div className='flex items-center justify-center h-64'>
+                        <Loader2 className='animate-spin text-orange-200' size={36} />
                     </div>
-            )
-               
-           })
-        }
+                ) : (
+                    testArray.map((t, index) => (
+                        <div key={t?.data?._id ?? index} className='lg:w-2/3 md:w-4/5 w-full'>
+                            <TestItem
+                                id={t.data._id}
+                                name={t.data.name}
+                                totalMarks={t.data.totalMarks}
+                                timeDuration={t.data.timeDuration}
+                                noOfSec={t.data.noOfSec}
+                                isSection={(t.data.sections.length > 0)}
+                                createdBy={t.data.createdBy}
+                                subjects={t.data.subjects}
+                            />
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
-
-    </div>
-    
-  )
+    )
 }
 
 export default MyTests

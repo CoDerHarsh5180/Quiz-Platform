@@ -1,4 +1,5 @@
 import {axiosInstance} from "./apirequests";
+import toast from 'react-hot-toast';
 
 const createStructure = async(name, totalMarks,timeDuration, noOfSec, noOfSub, subjects)=>{
     try{
