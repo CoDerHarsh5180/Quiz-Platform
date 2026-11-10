@@ -1,13 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-import { Student }      from '../models/student-models/student.models.js';
-import { Otp }          from '../models/otp.models.js';
-import sendMail         from '../utils/sendEmail.js';
+import { Student } from '../models/student-models/student.models.js';
+import { Otp } from '../models/otp.models.js';
+import sendMail from '../utils/sendEmail.js';
 import { ApiError }     from '../utils/ApiError.js';
 import { ApiResponse }  from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
 
 const cookieOptions = {
   httpOnly: true,
@@ -34,7 +32,6 @@ const generateTokens = async (studentId) => {
   return { accessToken, refreshToken };
 };
 
-// ── Register – Step 1: send OTP ────────────────────────────────────────────────
 const studentRegister = asyncHandler(async (req, res) => {
   const { name, username, email, password, examTypes } = req.body;
 
