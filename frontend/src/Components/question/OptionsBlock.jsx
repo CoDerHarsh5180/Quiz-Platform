@@ -65,7 +65,7 @@ export default function OptionsBlock({
   return (
     <div>
       <div className="flex items-baseline justify-between mb-2">
-        <label className="block text-sm font-semibold text-gray-700">Options</label>
+        <label className="block text-sm font-semibold text-[var(--color-text-on-light)]">Options</label>
       </div>
 
       <div className={`grid ${gridCols} gap-3`}>
@@ -75,7 +75,7 @@ export default function OptionsBlock({
             <div
               key={idx}
               className={`flex items-center gap-2 border rounded-lg px-2 py-1 transition-colors ${
-                isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-200'
+                isSelected ? 'border-[var(--color-blue-border)] bg-[var(--color-blue-light)]' : 'border-[var(--color-border-light)]'
               }`}
             >
               <input
@@ -85,9 +85,9 @@ export default function OptionsBlock({
                 checked={!!isSelected}
                 onChange={() => handleSelect(opt)}
                 disabled={!opt}
-                className={`w-4 h-4 shrink-0 text-blue-600 border-gray-300 focus:ring-blue-500 ${isMSQ ? 'rounded' : ''}`}
+                className={`w-4 h-4 shrink-0 text-[var(--color-blue)] border-[var(--color-border-light)] focus:ring-[var(--color-blue-focus)] ${isMSQ ? 'rounded' : ''}`}
               />
-              <span className="font-bold text-gray-500 text-xs w-4 shrink-0">
+              <span className="font-bold text-[var(--color-text-on-mid)] text-xs w-4 shrink-0">
                 {String.fromCharCode(65 + idx)}.
               </span>
               {editable ? (
@@ -99,7 +99,7 @@ export default function OptionsBlock({
                   className="w-full px-3 py-2 bg-transparent border-none outline-none text-sm"
                 />
               ) : (
-                <span className="text-sm flex-1">{opt || <em className="text-gray-400">—</em>}</span>
+                <span className="text-sm flex-1">{opt || <em className="text-[var(--color-text-muted)]">—</em>}</span>
               )}
             </div>
           );
@@ -107,7 +107,7 @@ export default function OptionsBlock({
       </div>
 
       {!correctAnswer && (
-        <p className="text-xs text-red-500 mt-1.5">
+        <p className="text-xs text-[var(--color-error-text)] mt-1.5">
           {isMCQ ? 'Please tick the correct answer.' : 'Please tick at least one correct answer.'}
         </p>
       )}

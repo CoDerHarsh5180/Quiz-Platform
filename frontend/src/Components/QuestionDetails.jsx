@@ -59,20 +59,20 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
 
   if (loading) {
     return (
-      <div className="mt-4 p-8 bg-gray-900/90 border border-gray-800 rounded-2xl flex flex-col items-center justify-center gap-3 text-white">
-        <Loader2 size={32} className="animate-spin text-orange-300" />
-        <p className="text-sm text-gray-300">Loading test structure and questions...</p>
+      <div className="mt-4 p-8 bg-[var(--color-bg-page)]/90 border border-[var(--color-border-subtle)] rounded-2xl flex flex-col items-center justify-center gap-3 text-[var(--color-text-primary)]">
+        <Loader2 size={32} className="animate-spin text-[var(--color-primary-text-alt)]" />
+        <p className="text-sm text-[var(--color-text-secondary)]">Loading test structure and questions...</p>
       </div>
     );
   }
 
   if (!structure) {
     return (
-      <div className="mt-4 p-6 bg-gray-900 border border-gray-800 rounded-2xl text-center text-gray-400">
+      <div className="mt-4 p-6 bg-[var(--color-bg-page)] border border-[var(--color-border-subtle)] rounded-2xl text-center text-[var(--color-text-muted)]">
         <p>Could not load test details.</p>
         <button
           onClick={() => loadData(true)}
-          className="mt-3 px-4 py-1.5 bg-orange-200 text-black text-sm font-semibold rounded hover:bg-orange-300"
+          className="mt-3 px-4 py-1.5 bg-[var(--color-primary-light)] text-[var(--color-text-dark)] text-sm font-semibold rounded hover:bg-[var(--color-primary-light-hover)]"
         >
           Retry
         </button>
@@ -85,29 +85,29 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
   );
 
   return (
-    <div className="mt-4 p-5 sm:p-7 bg-gray-800 border border-gray-800 rounded-2xl shadow-2xl text-white space-y-6 animate-in fade-in duration-300">
+    <div className="mt-4 p-5 sm:p-7 bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] rounded-2xl shadow-2xl text-[var(--color-text-primary)] space-y-6 animate-in fade-in duration-300">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-gray-800 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[var(--color-border-subtle)] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <FileText size={22} className="text-orange-200" />
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">{title}</h2>
+            <FileText size={22} className="text-[var(--color-primary-text)]" />
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{title}</h2>
           </div>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-[var(--color-text-muted)] mt-1">
             Viewing questions & configuration for{' '}
-            <span className="text-orange-200 font-semibold">{structure.name}</span>
+            <span className="text-[var(--color-primary-text)] font-semibold">{structure.name}</span>
           </p>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
           <button
             onClick={() => loadData(true)} disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-bg-card)] hover:bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] text-xs font-medium rounded-lg border border-[var(--color-border)] transition cursor-pointer disabled:opacity-50"
           >
             <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} /> Refresh
           </button>
           {onClose && (
-            <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition cursor-pointer">
+            <button onClick={onClose} className="p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-card)] transition cursor-pointer">
               <X size={18} />
             </button>
           )}
@@ -123,12 +123,12 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
 
       {/* Subjects pill bar */}
       {structure.subjects?.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap text-sm bg-gray-900/60 p-3 rounded-xl border border-gray-800/80">
-          <span className="text-gray-400 text-xs font-semibold flex items-center gap-1">
-            <BookOpen size={14} className="text-orange-300" /> Subjects:
+        <div className="flex items-center gap-2 flex-wrap text-sm bg-[var(--color-bg-page)]/60 p-3 rounded-xl border border-[var(--color-border-subtle)]/80">
+          <span className="text-[var(--color-text-muted)] text-xs font-semibold flex items-center gap-1">
+            <BookOpen size={14} className="text-[var(--color-primary-text-alt)]" /> Subjects:
           </span>
           {structure.subjects.map((subj, idx) => (
-            <span key={idx} className="bg-gray-800 text-gray-200 border border-gray-700 px-2.5 py-0.5 rounded-full text-xs font-medium">
+            <span key={idx} className="bg-[var(--color-bg-card)] text-[var(--color-text-secondary)] border border-[var(--color-border)] px-2.5 py-0.5 rounded-full text-xs font-medium">
               {subj}
             </span>
           ))}
@@ -137,11 +137,11 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
 
       {/* Section tab filters */}
       {sections.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 border-b border-gray-800">
+        <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[var(--color-border-subtle)]">
           <button
             onClick={() => setSelectedTab('ALL')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
-              selectedTab === 'ALL' ? 'bg-orange-200 text-black shadow' : 'bg-gray-900 text-gray-300 hover:bg-gray-800 border border-gray-800'
+              selectedTab === 'ALL' ? 'bg-[var(--color-primary-light)] text-[var(--color-text-dark)] shadow' : 'bg-[var(--color-bg-page)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)]'
             }`}
           >
             All Sections ({questions.length})
@@ -153,11 +153,11 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
                 key={sec._id || sec.secName}
                 onClick={() => setSelectedTab(sec.secName)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
-                  selectedTab === sec.secName ? 'bg-orange-200 text-black shadow' : 'bg-gray-900 text-gray-300 hover:bg-gray-800 border border-gray-800'
+                  selectedTab === sec.secName ? 'bg-[var(--color-primary-light)] text-[var(--color-text-dark)] shadow' : 'bg-[var(--color-bg-page)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)]'
                 }`}
               >
                 <span>Section {sec.secName}</span>
-                <span className={`text-[10px] px-1.5 rounded-full ${selectedTab === sec.secName ? 'bg-black text-orange-200' : 'bg-gray-800 text-gray-400'}`}>
+                <span className={`text-[10px] px-1.5 rounded-full ${selectedTab === sec.secName ? 'bg-[var(--color-text-dark)] text-[var(--color-primary-text)]' : 'bg-[var(--color-bg-card)] text-[var(--color-text-muted)]'}`}>
                   {count}
                 </span>
               </button>
@@ -168,9 +168,9 @@ function QuestionDetails({ id, onClose, title = 'Test Overview & Questions' }) {
 
       {/* Section panels or empty state */}
       {sections.length === 0 ? (
-        <div className="bg-gray-900 border border-dashed border-gray-700 rounded-xl p-8 text-center text-gray-400 space-y-2">
-          <p className="font-semibold text-gray-300">No sections configured yet</p>
-          <p className="text-xs text-gray-500">Click "Edit Section" above to define Section marking scheme and question count.</p>
+        <div className="bg-[var(--color-bg-page)] border border-dashed border-[var(--color-border)] rounded-xl p-8 text-center text-[var(--color-text-muted)] space-y-2">
+          <p className="font-semibold text-[var(--color-text-secondary)]">No sections configured yet</p>
+          <p className="text-xs text-[var(--color-text-faint)]">Click "Edit Section" above to define Section marking scheme and question count.</p>
         </div>
       ) : (
         <div className="space-y-6">

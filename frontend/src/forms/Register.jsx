@@ -58,19 +58,19 @@ const RegisterPage = () => {
         >
             {/* Card */}
             <div
-                className="w-full max-w-lg bg-white shadow-xl rounded-xl relative mx-4 max-h-[90vh] flex flex-col"
+                className="w-full max-w-lg bg-[var(--color-modal-bg)] shadow-xl rounded-xl relative mx-4 max-h-[90vh] flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* ── Header ── */}
                 <div className="px-8 pt-8 pb-4 border-b flex-shrink-0">
                     <span
-                        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-400 hover:text-gray-700"
+                        className="absolute top-0 right-0 p-3 cursor-pointer text-[var(--color-text-faint)] hover:text-[var(--color-modal-close-hover)]"
                         onClick={() => setRegisterForm(false)}
                     >
                         <X size={20} />
                     </span>
                     <h2 className="text-2xl font-semibold text-center">Create an account</h2>
-                    <p className="text-gray-500 text-center text-sm mt-1">SIGN UP to प्रश्णोत्तर</p>
+                    <p className="text-[var(--color-text-faint)] text-center text-sm mt-1">SIGN UP to प्रश्णोत्तर</p>
                 </div>
 
                 {/* ── Scrollable body ── */}
@@ -79,81 +79,81 @@ const RegisterPage = () => {
 
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Name</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Name</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Full name"
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                                 required
                             />
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Email</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="you@example.com"
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                                 required
                             />
                         </div>
 
                         {/* Username */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Username</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Username</label>
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder="username"
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                                 required
                             />
                         </div>
 
                         {/* Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Password</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Password</label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                                 required
                             />
                         </div>
 
                         {/* Experience */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Experience</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Experience</label>
                             <input
                                 type="text"
                                 value={experience}
                                 onChange={(e) => setExperience(e.target.value)}
                                 placeholder="e.g. 5 years"
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                             />
                         </div>
 
                         {/* Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Select Field</label>
+                            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">Select Field</label>
                             <select
                                 value={field}
                                 onChange={(e) => setField(e.target.value)}
                                 disabled={otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border border-[var(--color-border-light)] rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed"
                             >
                                 <option value="JEE">JEE</option>
                                 <option value="NEET">NEET</option>
@@ -169,7 +169,7 @@ const RegisterPage = () => {
                                 type="button"
                                 onClick={handleSendOTP}
                                 disabled={sendingOtp}
-                                className="w-full flex items-center justify-center gap-2 bg-violet-500 text-white py-2 rounded-md hover:bg-violet-600 transition disabled:opacity-50"
+                                className="w-full flex items-center justify-center gap-2 bg-[var(--color-accent)] text-[var(--color-text-primary)] py-2 rounded-md hover:bg-[var(--color-accent-hover)] transition disabled:opacity-50"
                             >
                                 {sendingOtp ? (
                                     "Sending OTP..."
@@ -183,10 +183,10 @@ const RegisterPage = () => {
 
                         {/* ── OTP field: always rendered, disabled until OTP sent ── */}
                         <div className="md:col-span-2">
-                            <label className={`block text-sm font-medium mb-1 ${otpSent ? 'text-gray-700' : 'text-gray-400'}`}>
+                            <label className={`block text-sm font-medium mb-1 ${otpSent ? 'text-[var(--color-text-on-light)]' : 'text-[var(--color-text-muted)]'}`}>
                                 OTP
                                 {otpSent && (
-                                    <span className="ml-2 text-xs text-violet-600 font-normal">
+                                    <span className="ml-2 text-xs text-[var(--color-accent-link)] font-normal">
                                         Sent to {email}
                                     </span>
                                 )}
@@ -203,7 +203,7 @@ const RegisterPage = () => {
                                 }}
                                 placeholder={otpSent ? `Enter ${OTP_LENGTH}-digit OTP` : "Send OTP first"}
                                 disabled={!otpSent}
-                                className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100 disabled:cursor-not-allowed tracking-widest text-center text-lg font-mono"
+                                className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border border-[var(--color-border-light)] rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)] disabled:bg-[var(--color-border-light)] disabled:cursor-not-allowed tracking-widest text-center text-lg font-mono"
                                 required={otpSent}
                             />
                             {/* Digit progress indicator */}
@@ -213,16 +213,16 @@ const RegisterPage = () => {
                                         key={i}
                                         className={`h-1 flex-1 rounded-full transition-all duration-200 ${
                                             i < otp.length
-                                                ? 'bg-violet-500'
+                                                ? 'bg-[var(--color-accent)]'
                                                 : otpSent
-                                                ? 'bg-gray-200'
-                                                : 'bg-gray-100'
+                                                ? 'bg-[var(--color-border-light)]'
+                                                : 'bg-[var(--color-border-light)]'
                                         }`}
                                     />
                                 ))}
                             </div>
                             {otpSent && (
-                                <p className="text-xs text-gray-400 mt-1 text-right">
+                                <p className="text-xs text-[var(--color-text-muted)] mt-1 text-right">
                                     {otp.length}/{OTP_LENGTH} digits
                                 </p>
                             )}
@@ -234,7 +234,7 @@ const RegisterPage = () => {
                                 <button
                                     type="submit"
                                     disabled={verifying || otp.length !== OTP_LENGTH}
-                                    className="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition disabled:opacity-50"
+                                    className="w-full bg-[var(--color-accent)] text-[var(--color-text-primary)] py-2 rounded-md hover:bg-[var(--color-accent-hover)] transition disabled:opacity-50"
                                 >
                                     {verifying ? "Verifying..." : "Verify OTP & Create Account"}
                                 </button>
@@ -244,7 +244,7 @@ const RegisterPage = () => {
                                         setOtpSent(false);
                                         setOtp("");
                                     }}
-                                    className="w-full mt-2 text-sm text-gray-400 hover:text-gray-600 underline"
+                                    className="w-full mt-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] underline"
                                 >
                                     ← Edit details
                                 </button>
@@ -254,11 +254,11 @@ const RegisterPage = () => {
                 </form>
 
                 {/* ── Footer ── */}
-                <div className="px-8 pb-6 pt-3 border-t flex-shrink-0 text-center text-sm text-gray-500">
+                <div className="px-8 pb-6 pt-3 border-t border-[var(--color-border-light)] flex-shrink-0 text-center text-sm text-[var(--color-modal-hint)]">
                     Already have an account?{" "}
                     <button
                         type="button"
-                        className="text-violet-600 font-semibold hover:underline"
+                        className="text-[var(--color-accent-link)] font-semibold hover:underline"
                         onClick={() => {
                             setLoginForm(true);
                             setRegisterForm(false);

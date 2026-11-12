@@ -30,21 +30,21 @@ const LoginPage = () => {
         >
             {/* Card — stop propagation so clicking inside doesn't close */}
             <div
-                className="w-full max-w-md bg-white shadow-md rounded-lg p-8 relative mx-4"
+                className="w-full max-w-md bg-[var(--color-modal-bg)] shadow-md rounded-lg p-8 relative mx-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <span
-                    className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700"
+                    className="absolute top-0 right-0 p-3 cursor-pointer text-[var(--color-modal-close)] hover:text-[var(--color-modal-close-hover)]"
                     onClick={() => setLoginForm(false)}
                 >
                     <X />
                 </span>
                 <h2 className="text-2xl font-semibold text-center mb-2">Welcome back</h2>
-                <p className="text-gray-600 text-center mb-6">LOGIN to प्रश्णोत्तर</p>
+                <p className="text-[var(--color-modal-hint)] text-center mb-6">LOGIN to प्रश्णोत्तर</p>
 
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-[var(--color-text-on-light)]">
                             EMAIL or USERNAME
                         </label>
                         <input
@@ -52,13 +52,13 @@ const LoginPage = () => {
                             value={identifier}
                             onChange={(e) => setIdentifier(e.target.value)}
                             placeholder="email or username"
-                            className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
+                            className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)]"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-[var(--color-text-on-light)]">
                             PASSWORD
                         </label>
                         <input
@@ -66,7 +66,7 @@ const LoginPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="text-black mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500"
+                            className="text-[var(--color-text-dark)] mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-accent-focus)] focus:border-[var(--color-accent-focus)]"
                             required
                         />
                     </div>
@@ -74,16 +74,16 @@ const LoginPage = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="w-full bg-violet-500 text-white py-2 rounded-md hover:bg-violet-600 transition disabled:opacity-50"
+                        className="w-full bg-[var(--color-accent)] text-white py-2 rounded-md hover:bg-[var(--color-accent-hover)] transition disabled:opacity-50"
                     >
                         {submitting ? "Signing in..." : "Sign in →"}
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-gray-600">
+                <p className="mt-6 text-center text-[var(--color-modal-hint)]">
                     Don&apos;t have an account?{" "}
                     <button
-                        className="text-violet-600 font-semibold hover:underline"
+                        className="text-[var(--color-accent-link)] font-semibold hover:underline"
                         onClick={() => {
                             setLoginForm(false);
                             setRegisterForm(true);

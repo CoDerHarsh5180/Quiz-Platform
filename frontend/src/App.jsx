@@ -17,8 +17,8 @@ function App() {
   // so no page flashes the wrong state before auth is known.
   if (loading) {
     return (
-      <div className='fixed inset-0 bg-gray-900 flex items-center justify-center'>
-        <Loader2 size={48} className='animate-spin text-orange-200' />
+      <div className='fixed inset-0 bg-[var(--color-bg-page)] flex items-center justify-center'>
+        <Loader2 size={48} className='animate-spin text-[var(--color-primary-text)]' />
       </div>
     )
   }

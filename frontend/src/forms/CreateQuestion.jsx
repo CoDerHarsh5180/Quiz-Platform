@@ -71,10 +71,10 @@ export default function CreateQuestion({ id }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md border border-gray-100 relative text-black">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Question</h2>
+    <div className="max-w-2xl mx-auto my-8 p-6 bg-[var(--color-modal-bg)] rounded-xl shadow-md border border-[var(--color-border-light)] relative text-[var(--color-text-dark)]">
+      <h2 className="text-2xl font-bold text-[var(--color-text-on-light)] mb-6">Create Question</h2>
       <span
-        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-500 hover:text-gray-700 z-10"
+        className="absolute top-0 right-0 p-3 cursor-pointer text-[var(--color-text-faint)] hover:text-[var(--color-text-on-light)] z-10"
         onClick={() => setAddQues(false)}
       >
         <X />
@@ -84,12 +84,12 @@ export default function CreateQuestion({ id }) {
         {/* Section selector + type badge */}
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-semibold text-gray-700">Select Section</label>
+            <label className="block text-sm font-semibold text-[var(--color-text-on-light)]">Select Section</label>
             <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 ${
-              isNumerical  ? 'bg-purple-100 text-purple-800 border border-purple-200'
-              : isDescriptive ? 'bg-amber-100 text-amber-800 border border-amber-200'
-              : isTrueFalse   ? 'bg-teal-100  text-teal-800  border border-teal-200'
-              : 'bg-blue-100 text-blue-800 border border-blue-200'
+              isNumerical  ? 'bg-[var(--color-hint-bg)] text-[var(--color-numerical-label)] border border-[var(--color-numerical-input-border)]'
+              : isDescriptive ? 'bg-[var(--color-hint-bg)] text-[var(--color-hint-text)] border border-[var(--color-hint-border)]'
+              : isTrueFalse   ? 'bg-[var(--color-hint-bg)] text-[var(--color-teal-label)] border border-[var(--color-teal-border)]'
+              : 'bg-[var(--color-blue-light)] text-[var(--color-blue)] border border-[var(--color-blue-border)]'
             }`}>
               {isNumerical  && <Hash size={12} />}
               {isDescriptive && <FileText size={12} />}
@@ -100,7 +100,7 @@ export default function CreateQuestion({ id }) {
           <select
             value={section}
             onChange={(e) => setSection(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+            className={`w-full px-4 py-2 border border-[var(--color-border-light)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none transition-all`}
           >
             {sectionArray.map((_, i) => {
               const c = String.fromCharCode(65 + i);
@@ -111,22 +111,22 @@ export default function CreateQuestion({ id }) {
 
         {/* Mode toggle */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Input Mode</label>
+          <label className="block text-sm font-semibold text-[var(--color-text-on-light)] mb-2">Input Mode</label>
           <div className="flex gap-6">
             {[{ val: 'manual', label: 'Manual Entry' }, { val: 'prompt', label: 'AI Prompt (OCR from Image)' }].map(({ val, label }) => (
               <label key={val} className="flex items-center gap-2 cursor-pointer group">
                 <input
                   type="radio" name="mode" value={val}
                   checked={mode === val} onChange={() => setMode(val)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  className="w-4 h-4 text-[var(--color-blue)] border-[var(--color-border-light)] focus:ring-[var(--color-blue-focus)]"
                 />
-                <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">{label}</span>
+                <span className="text-sm font-medium text-[var(--color-modal-hint)] group-hover:text-[var(--color-text-dark)] transition-colors">{label}</span>
               </label>
             ))}
           </div>
         </div>
 
-        <hr className="border-gray-200 my-4" />
+        <hr className="border-[var(--color-border-light)] my-4" />
 
         {/* Form body */}
         {mode === 'manual' ? (
@@ -151,14 +151,14 @@ export default function CreateQuestion({ id }) {
         <div className="pt-4 flex justify-between gap-3">
           <button
             type="submit" disabled={loading}
-            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] text-[var(--color-text-primary)] font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             {loading ? 'Creating Question...' : 'Submit Question'}
           </button>
           {loading && (
             <button
               type="button"
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium"
+              className="px-4 py-2 bg-[var(--color-error)] text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-error-hover)] text-sm font-medium"
               onClick={() => setLoading(false)}
             >
               Cancel

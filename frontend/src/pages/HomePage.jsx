@@ -7,7 +7,7 @@ function HomePage() {
  
   return (
     <div>
-        <div className='bg-gray-900 text-white w-full max-h-full'>
+        <div className='bg-[var(--color-bg-page)] text-[var(--color-text-primary)] w-full max-h-full'>
             <Navbar />
             <HeroSection />
         </div>

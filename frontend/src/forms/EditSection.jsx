@@ -42,11 +42,11 @@ function EditSection({ id, noOfSec }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-8 p-6 bg-gray-800 text-white  rounded-xl -shadow-md border border-gray-100 relative">
-      <h2 className="text-2xl font-bold text-white mb-6">Edit Section</h2>
+    <div className="max-w-2xl mx-auto my-8 p-6 bg-[var(--color-bg-card)] text-[var(--color-text-primary)] rounded-xl -shadow-md border border-[var(--color-border)] relative">
+      <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-6">Edit Section</h2>
       
       <span 
-        className="absolute top-0 right-0 p-3 cursor-pointer text-gray-100 hover:text-gray-200 z-10" 
+        className="absolute top-0 right-0 p-3 cursor-pointer text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] z-10" 
         onClick={() => { setSectionEditing(false); }}
       >
         <X />
@@ -55,23 +55,23 @@ function EditSection({ id, noOfSec }) {
       <form onSubmit={handleSave} className="space-y-6">
         {/* 1. Select Section Dropdown */}
         <div>
-          <label className="block text-sm font-semibold text-gray-100 mb-2">
+          <label className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
             Select Section
           </label>
           <select 
             name="Section" 
             value={section || "None"}
             onChange={(e) => setSection(e.target.value === "None" ? null : e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-white/50"    
+            className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none transition-all text-[var(--color-text-muted)]"    
           >
-            <option value="None" className='text-sm bg-gray-600'>None</option>
+            <option value="None" className='text-sm bg-[var(--color-bg-input)]'>None</option>
             
 
             {
               sectionArray.map((id, index)=>{
                 const secChar = String.fromCharCode(65 + index);
                 return(
-                  <option key={secChar} value={secChar} className='text-sm bg-gray-600'>
+                  <option key={secChar} value={secChar} className='text-sm bg-[var(--color-bg-input)]'>
                     Section {secChar}
                   </option>
                 )
@@ -80,7 +80,7 @@ function EditSection({ id, noOfSec }) {
           </select>
         </div>
 
-        <hr className="border-gray-200 my-4" />
+        <hr className="border-[var(--color-border)] my-4" />
 
         {/* 2. Form Fields Grid / Controls */}
         <div className="space-y-4">
@@ -95,7 +95,7 @@ function EditSection({ id, noOfSec }) {
                 value={positiveMarks}
                 onChange={(e) => setPositiveMarks(e.target.value)}
                 placeholder="Positive Marks"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-white"
+                className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none text-[var(--color-text-primary)]"
                 required
               />
             </div>
@@ -109,7 +109,7 @@ function EditSection({ id, noOfSec }) {
                 value={negativeMarks}
                 onChange={(e) => setNegativeMarks(e.target.value)}
                 placeholder="Negative Marks"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-white"
+                className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none text-[var(--color-text-primary)]"
                 required
               />
             </div>
@@ -125,7 +125,7 @@ function EditSection({ id, noOfSec }) {
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Enter instructions for this section..."
               rows="3"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-white"
+              className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none text-[var(--color-text-primary)]"
               required
             />
           </div>
@@ -141,7 +141,7 @@ function EditSection({ id, noOfSec }) {
                 value={noOfQues}
                 onChange={(e) => setNoOfQues(e.target.value)}
                 placeholder="Add Number of Questions"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-white"
+                className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none text-[var(--color-text-primary)]"
                 required
               />
             </div>
@@ -153,7 +153,7 @@ function EditSection({ id, noOfSec }) {
               <select
                 value={typeOfQues}
                 onChange={(e) => setTypeOfQues(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 bg-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-white"
+                className="w-full px-4 py-2 border border-[var(--color-border)] bg-[var(--color-bg-page)] rounded-lg focus:ring-2 focus:ring-[var(--color-blue-focus)] focus:border-[var(--color-blue-focus)] outline-none transition-all text-[var(--color-text-primary)]"
               >
                 <option value="MCQ">MCQ</option>
                 <option value="MSQ">MSQ</option>
@@ -169,7 +169,7 @@ function EditSection({ id, noOfSec }) {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer"
+            className="w-full bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] text-[var(--color-text-primary)] font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors cursor-pointer"
           >
             Save Changes
           </button>

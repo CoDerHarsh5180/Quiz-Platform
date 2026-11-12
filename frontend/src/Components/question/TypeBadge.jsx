@@ -4,14 +4,14 @@ import { Hash, FileText, CheckCircle2 } from 'lucide-react';
 /** Colored pill badge showing the question type. */
 export default function TypeBadge({ type }) {
   const map = {
-    NUMERICAL:   { cls: 'bg-orange-950 border-orange-700 text-orange-300', icon: <Hash size={11} />,         label: 'NUMERICAL' },
-    DESCRIPTIVE: { cls: 'bg-amber-950  border-amber-700  text-amber-300',  icon: <FileText size={11} />,     label: 'DESCRIPTIVE' },
-    'TRUE/FALSE': { cls: 'bg-teal-950  border-teal-700   text-teal-300',   icon: <CheckCircle2 size={11} />, label: 'TRUE/FALSE' },
-    MSQ:         { cls: 'bg-cyan-950   border-cyan-700   text-cyan-300',   icon: null,                       label: 'MSQ' },
+    NUMERICAL:   { cls: 'bg-[var(--color-numerical-bg)] border-[var(--color-numerical-border)] text-[var(--color-numerical-text)]', icon: <Hash size={11} />,         label: 'NUMERICAL' },
+    DESCRIPTIVE: { cls: 'bg-[var(--color-descriptive-bg)] border-[var(--color-descriptive-border)] text-[var(--color-descriptive-text)]',  icon: <FileText size={11} />,     label: 'DESCRIPTIVE' },
+    'TRUE/FALSE': { cls: 'bg-[var(--color-trueFalse-bg)] border-[var(--color-trueFalse-border)] text-[var(--color-trueFalse-text)]',   icon: <CheckCircle2 size={11} />, label: 'TRUE/FALSE' },
+    MSQ:         { cls: 'bg-[var(--color-msq-bg)] border-[var(--color-msq-border)] text-[var(--color-msq-text)]',   icon: null,                       label: 'MSQ' },
   };
 
   const { cls, icon, label } = map[type] ?? {
-    cls: 'bg-blue-950 border-blue-700 text-blue-300',
+    cls: 'bg-[var(--color-blue-bg-dark)] border-[var(--color-blue-border-dark)] text-[var(--color-blue-text)]',
     icon: null,
     label: 'MCQ',
   };

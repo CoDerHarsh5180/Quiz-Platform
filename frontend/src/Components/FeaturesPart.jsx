@@ -11,10 +11,10 @@ const Features = [
 
 function FeaturesPart() {
   return (
-    <div className='bg-gray-950'>
+    <div className='bg-[var(--color-bg-deepest)]'>
         <div className='flex gap-1 items-center px-5 pt-5'>
-            <CircleStar className='text-white' />
-            <div className='text-white text-4xl p-5'>Features of Our Platform</div>
+            <CircleStar className='text-[var(--color-text-primary)]' />
+            <div className='text-[var(--color-text-primary)] text-4xl p-5'>Features of Our Platform</div>
         </div>
 
         {/* #24 — added key={f.head} on each FeatureCard */}
@@ -37,7 +37,7 @@ export default FeaturesPart
 
 const FeatureCard = ({icon, head, description}) => {
     return (
-        <div className='p-5 text-white flex flex-col items-center text-center bg-gray-800 rounded border border-white'>
+        <div className='p-5 text-[var(--color-text-primary)] flex flex-col items-center text-center bg-[var(--color-bg-card)] rounded border border-[var(--color-border-white)]'>
             <div className='py-10'>{icon}</div>
             <div className='text-3xl font-bold'>{head}</div>
             <div className='text-sm mt-2'>{description}</div>

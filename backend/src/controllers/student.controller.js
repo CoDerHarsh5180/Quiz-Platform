@@ -3,9 +3,11 @@ import jwt from 'jsonwebtoken';
 import { Student } from '../models/student-models/student.models.js';
 import { Otp } from '../models/otp.models.js';
 import sendMail from '../utils/sendEmail.js';
-import { ApiError }     from '../utils/ApiError.js';
-import { ApiResponse }  from '../utils/ApiResponse.js';
+import { ApiError } from '../utils/ApiError.js';
+import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import redis from '../db/redis.js';
+
 
 const cookieOptions = {
   httpOnly: true,
@@ -14,9 +16,8 @@ const cookieOptions = {
 };
 
 const generateOtp = () => {
-  const otp    = Math.ceil(Math.random() * 1_000_000);
-  const otpStr = String(otp);
-  return '0'.repeat(6 - otpStr.length) + otpStr;
+  const otp = Math.floor(Math.random() * 1_000_000);
+  return String(otp).padStart(6, '0');
 };
 
 const generateTokens = async (studentId) => {
@@ -33,8 +34,9 @@ const generateTokens = async (studentId) => {
 };
 
 const studentRegister = asyncHandler(async (req, res) => {
+  console.log('Register request body:', req.body);
   const { name, username, email, password, examTypes } = req.body;
-
+  console.log('Register request body:', req.body);
   if (!name || !username || !email || !password) {
     throw new ApiError(400, 'All fields are required');
   }
@@ -43,46 +45,47 @@ const studentRegister = asyncHandler(async (req, res) => {
   if (existedStudent) {
     throw new ApiError(409, 'Student already registered with this username or email');
   }
+  console.log('Creating OTP document for email:', email);
+  const otp = String(generateOtp());
 
-  const otp = generateOtp();
-  console.log('Student OTP:', otp);
-
-  await sendMail(email, otp);
-  const otpDoc = await Otp.create({ otp, email });
-
+  console.log('Generated OTP:', otp);
+  sendMail(email, otp);
+  await redis.setex(`otp:${email}`, 1000, otp);
+  console.log('OTP stored in Redis for email:', email);
   return res
     .status(200)
-    .json(new ApiResponse(200, { otpId: otpDoc._id }, 'OTP sent to your email. Please verify to complete registration.'));
+    .json(new ApiResponse(200, { }, 'OTP sent to your email. Please verify to complete registration.'));
 });
 
 // ── Register – Step 2: verify OTP and create account ──────────────────────────
 const studentVerifyOtp = asyncHandler(async (req, res) => {
   const { name, username, email, password, examTypes, otp } = req.body;
-
   if (!email || !otp) {
     throw new ApiError(400, 'Email and OTP are required');
   }
-
-  const otpRecords = await Otp.find({ email });
-  if (!otpRecords.length) {
+  const savedOtp = await redis.get(`otp:${email}`);
+ 
+  if (!savedOtp) {
     throw new ApiError(400, 'OTP not found or expired. Please register again.');
   }
 
-  const latestOtp = otpRecords[otpRecords.length - 1];
-  if (latestOtp.otp.trim() !== otp.trim()) {
+  if (String(savedOtp) !== otp) {
     throw new ApiError(400, 'Invalid OTP');
   }
 
+  await redis.del(`otp:${email}`);
+  console.log('OTP verified for email:', email);
+  
   const student = await Student.create({
-    name,
-    username,
-    email,
-    password,
+    name:name,
+    username: username,
+    email: email,
+    password: password,
     examTypes: examTypes || [],
   });
 
   const createdStudent = await Student.findById(student._id).select('-password -refreshToken');
-
+  console.log('Created student:', createdStudent);
   return res
     .status(201)
     .json(new ApiResponse(201, createdStudent, 'Student registered successfully'));

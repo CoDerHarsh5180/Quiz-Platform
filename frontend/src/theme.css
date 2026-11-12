@@ -1,0 +1,144 @@
+
+
+:root {
+
+  /* ── 1. BRAND / PRIMARY (orange scale) ──────────────────── */
+  --color-primary:          #a67e18;  
+  --color-primary-hover:    #ff9d00;   
+  --color-primary-light:    #fed7aa;   
+  --color-primary-light-hover: #fdba74;
+  --color-primary-muted:    #431407;   
+  --color-primary-border:   #c2410c;   
+  --color-primary-text:     #fed7aa;   
+  --color-primary-text-alt: #fdba74;   
+
+
+  /* ── 2. PAGE BACKGROUNDS (dark scale) ───────────────────── */
+  --color-bg-deepest:   #030712;   
+  --color-bg-page:      #111827;   
+  --color-bg-card:      #1f2937;   
+  --color-bg-elevated:  #374151;   
+  --color-bg-input:     #4b5563;   
+  --color-bg-subtle:    #6b7280;   
+  --color-bg-chip:      #374151;   
+
+
+  /* ── 3. BORDERS ─────────────────────────────────────────── */
+  --color-border:         #374151;   
+  --color-border-subtle:  #1f2937;   
+  --color-border-light:   #e5e7eb;   
+  --color-border-white:   #ffffff;   
+
+
+  /* ── 4. TEXT ─────────────────────────────────────────────── */
+  --color-text-primary:   #ffffff;  
+  --color-text-secondary: #d1d5db;  
+  --color-text-muted:     #9ca3af;  
+  --color-text-faint:     #6b7280;  
+  --color-text-dark:      #000000;  
+  --color-text-on-light:  #374151;  
+  --color-text-on-mid:    #6b7280;  
+
+
+  /* ── 5. MODALS / FORMS (light surface) ──────────────────── */
+  --color-modal-bg:         #ffffff;   
+  --color-modal-text:       #000000;   
+  --color-modal-label:      #374151;   
+  --color-modal-hint:       #4b5563;   
+  --color-modal-border:     #e5e7eb;   
+  --color-modal-close:      #6b7280;   
+  --color-modal-close-hover:#374151;   
+
+
+  /* ── 6. ACCENT — VIOLET (login / register / create forms) ── */
+  --color-accent:           #8b5cf6;   
+  --color-accent-hover:     #7c3aed;   
+  --color-accent-focus:     #8b5cf6;   
+  --color-accent-link:      #7c3aed;   
+
+
+  /* ── 7. ACCENT — BLUE (question submit / answer select) ──── */
+  --color-blue:             #2563eb;   
+  --color-blue-hover:       #1d4ed8;   
+  --color-blue-focus:       #3b82f6;   
+  --color-blue-light:       #eff6ff;   
+  --color-blue-border:      #93c5fd;   
+  --color-blue-text:        #93c5fd;   
+  --color-blue-bg-dark:     #172554;   
+  --color-blue-border-dark: #1d4ed8;   
+
+
+  /* ── 8. ACCENT — SKY (hero CTA button) ──────────────────── */
+  --color-sky:              #0c4a6e;   
+
+
+  /* ── 9. STATUS — RED (errors / cancel) ──────────────────── */
+  --color-error:            #ef4444;   
+  --color-error-hover:      #dc2626;   
+  --color-error-text:       #ef4444;   
+
+
+  /* ── 10. STATUS — GREEN (success / correct) ─────────────── */
+  --color-success:          #22c55e;   
+  --color-success-muted:    #14532d;   
+
+
+  /* ── 11. QUESTION TYPE BADGES ────────────────────────────── */
+  /* NUMERICAL */
+  --color-numerical-bg:     #431407;   
+  --color-numerical-border: #c2410c;   
+  --color-numerical-text:   #fed7aa;   
+
+  /* DESCRIPTIVE */
+  --color-descriptive-bg:   #451a03;   
+  --color-descriptive-border:#b45309;  
+  --color-descriptive-text: #fcd34d;   
+
+  /* TRUE/FALSE */
+  --color-trueFalse-bg:     #042f2e;   
+  --color-trueFalse-border: #0f766e;   
+  --color-trueFalse-text:   #5eead4;   
+
+  /* MSQ */
+  --color-msq-bg:           #083344;   
+  --color-msq-border:       #0e7490;   
+  --color-msq-text:         #67e8f9;   
+
+
+  /* ── 12. DESCRIPTIVE HINT BOX ────────────── */
+  --color-hint-bg:          #fffbeb;   
+  --color-hint-border:      #fcd34d;   
+  --color-hint-text:        #92400e;   
+  --color-hint-icon:        #d97706;   
+
+  /* ── 13. NUMERICAL ANSWER INPUT ─────────────────────────── */
+  --color-numerical-input-border: #d8b4fe; 
+  --color-numerical-input-focus:  #a855f7; 
+  --color-numerical-label:        #6b21a8; 
+
+
+  /* ── 14. TEAL (TRUE/FALSE select) ───────────────────────── */
+  --color-teal-border:   #5eead4;   
+  --color-teal-focus:    #14b8a6;   
+  --color-teal-label:    #134e4a;   
+
+
+  /* ── 15. HERO SECTION ─────────────── */
+  --color-hero-greeting: #fed7aa;   
+  --color-hero-subtitle: #fbcfe8;   
+
+
+  /* ── 16. LOADER ─────────────────────────────────────────── */
+  --color-loader: #3b82f6;   
+
+
+  /* ── 17. GRADIENT (TestItem accent bar) ─────────────────── */
+  --color-gradient-from: #fb923c;   
+  --color-gradient-via:  #fdba74;   
+  --color-gradient-to:   #fde68a;  
+
+
+  /* ── 18. BACKDROP ────────────────────── */
+  --color-backdrop:      rgba(0,0,0,0.5);   
+}
+

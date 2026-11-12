@@ -11,21 +11,21 @@ function MyTests() {
 
     if (loading) {
         return (
-            <div className='bg-gray-900 text-white min-h-screen flex items-center justify-center'>
-                <Loader2 className='animate-spin text-orange-200' size={40} />
+            <div className='bg-[var(--color-bg-page)] text-[var(--color-text-primary)] min-h-screen flex items-center justify-center'>
+                <Loader2 className='animate-spin text-[var(--color-primary-text)]' size={40} />
             </div>
         )
     }
 
     if (!user) {
         return (
-            <div className='bg-gray-900 text-white'>
+            <div className='bg-[var(--color-bg-page)] text-[var(--color-text-primary)]'>
                 <Navbar />
                 <div className='flex items-center justify-center h-screen flex-col gap-4'>
                     <h1 className='text-2xl font-bold'>Please Login to view your tests</h1>
                     <button
                         onClick={() => setLoginForm(true)}
-                        className='p-2 px-5 bg-orange-200 text-black font-bold rounded hover:bg-orange-300 transition'
+                        className='p-2 px-5 bg-[var(--color-primary-light)] text-[var(--color-text-dark)] font-bold rounded hover:bg-[var(--color-primary-light-hover)] transition'
                     >
                         Login Now
                     </button>
@@ -36,14 +36,14 @@ function MyTests() {
 
     if (!user?.tests?.length) {
         return (
-            <div className='bg-gray-900 text-white'>
+            <div className='bg-[var(--color-bg-page)] text-[var(--color-text-primary)]'>
                 <Navbar />
                 <div className='flex items-center justify-center h-screen flex-col gap-4'>
                     <h1 className='text-2xl font-bold'>NO TESTS FOUND</h1>
-                    <h3 className='text-gray-400'>Create your first test now</h3>
+                    <h3 className='text-[var(--color-text-muted)]'>Create your first test now</h3>
                     <button
                         onClick={() => setCreateTestForm(true)}
-                        className='p-2 px-5 bg-orange-200 text-black font-bold rounded hover:bg-orange-300 transition'
+                        className='p-2 px-5 bg-[var(--color-primary-light)] text-[var(--color-text-dark)] font-bold rounded hover:bg-[var(--color-primary-light-hover)] transition'
                     >
                         Create New Test
                     </button>
@@ -53,12 +53,12 @@ function MyTests() {
     }
 
     return (
-        <div className='bg-gray-900 text-white'>
+        <div className='bg-[var(--color-bg-page)] text-[var(--color-text-primary)]'>
             <Navbar />
-            <div className='px-10 py-4 space-y-4 bg-gray-800 rounded min-h-screen w-full flex flex-col items-center'>
+            <div className='px-10 py-4 space-y-4 bg-[var(--color-bg-card)] rounded min-h-screen w-full flex flex-col items-center'>
                 {loading1 ? (
                     <div className='flex items-center justify-center h-64'>
-                        <Loader2 className='animate-spin text-orange-200' size={36} />
+                        <Loader2 className='animate-spin text-[var(--color-primary-text)]' size={36} />
                     </div>
                 ) : (
                     testArray.map((t, index) => (

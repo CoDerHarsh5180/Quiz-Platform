@@ -71,22 +71,22 @@ function ImageUploadWithCrop({ label, onCropped, currentImage }) {
 
     return (
         <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">{label}</label>
+            <label className="block text-sm font-medium text-[var(--color-text-on-light)]">{label}</label>
             <input
                 type="file"
                 accept="image/*"
                 onChange={onFileChange}
                 onClick={(e) => { e.target.value = null; }}
-                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-5 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                className="w-full text-sm text-[var(--color-text-faint)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[var(--color-blue-light)] file:text-[var(--color-blue)] hover:file:bg-[var(--color-blue-light)] cursor-pointer"
             />
 
             {currentImage && (
                 <div className="mt-2 relative inline-block max-w-full">
-                    <img src={currentImage} alt="Cropped" className="max-h-28 w-auto rounded-lg border border-gray-200 object-contain" />
+                    <img src={currentImage} alt="Cropped" className="max-h-28 w-auto rounded-lg border border-[var(--color-border-light)] object-contain" />
                     <button
                         type="button"
                         onClick={() => onCropped(null)}
-                        className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 shadow-sm"
+                        className="absolute -top-1.5 -right-1.5 bg-[var(--color-error)] text-[var(--color-text-primary)] rounded-full p-0.5 hover:bg-[var(--color-error-hover)] shadow-sm"
                     >
                         <X size={12} />
                     </button>
@@ -95,9 +95,9 @@ function ImageUploadWithCrop({ label, onCropped, currentImage }) {
 
             {imageSrc && (
                 <div className="fixed inset-0 z-[200] bg-black/80 flex flex-col items-center justify-center p-4">
-                    <div className="bg-white w-full max-w-2xl rounded-xl p-4 flex flex-col gap-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-                        <h3 className="text-lg font-bold text-gray-800">Drag to Select Question Area</h3>
-                        <div className="flex justify-center bg-gray-100 p-2 rounded-lg max-h-96 overflow-auto border border-gray-200">
+                    <div className="bg-[var(--color-modal-bg)] w-full max-w-2xl rounded-xl p-4 flex flex-col gap-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+                        <h3 className="text-lg font-bold text-[var(--color-text-dark)]">Drag to Select Question Area</h3>
+                        <div className="flex justify-center bg-[var(--color-border-light)] p-2 rounded-lg max-h-96 overflow-auto border border-[var(--color-border-light)]">
                             <ReactCrop
                                 crop={crop}
                                 onChange={(c) => setCrop(c)}
@@ -115,14 +115,14 @@ function ImageUploadWithCrop({ label, onCropped, currentImage }) {
                             <button
                                 type="button"
                                 onClick={(e) => { e.preventDefault(); setImageSrc(null); }}
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                className="px-4 py-2 border border-[var(--color-border-light)] rounded-lg text-sm font-medium text-[var(--color-text-on-light)] hover:bg-[var(--color-border-light)]"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="button"
                                 onClick={handleSaveCrop}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm"
+                                className="px-4 py-2 bg-[var(--color-blue)] text-[var(--color-text-primary)] rounded-lg text-sm font-medium hover:bg-[var(--color-blue-hover)] shadow-sm"
                             >
                                 Crop & Save
                             </button>

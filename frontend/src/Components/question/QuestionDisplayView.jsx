@@ -15,30 +15,30 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
     question.options.some((o) => o && String(o).trim() !== '');
 
   return (
-    <div className="bg-gray-800 text-white rounded-xl p-5 shadow-lg border border-gray-700 space-y-4 hover:border-gray-600 transition">
+    <div className="bg-[var(--color-bg-card)] text-[var(--color-text-primary)] rounded-xl p-5 shadow-lg border border-[var(--color-border)] space-y-4 hover:border-[var(--color-bg-input)] transition">
       {/* Header row */}
       <div className="flex justify-between items-start gap-4">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="bg-orange-200 text-black font-bold text-xs px-2.5 py-1 rounded-full">
+          <span className="bg-[var(--color-primary-light)] text-[var(--color-text-dark)] font-bold text-xs px-2.5 py-1 rounded-full">
             Q{question.index || 1}
           </span>
           <TypeBadge type={sectionType} />
           {question.subject && (
-            <span className="bg-blue-900/60 text-blue-300 border border-blue-700 text-xs px-2.5 py-1 rounded-full font-medium">
+            <span className="bg-[var(--color-blue-bg-dark)]/60 text-[var(--color-blue-text)] border border-[var(--color-blue-border-dark)] text-xs px-2.5 py-1 rounded-full font-medium">
               {question.subject}
             </span>
           )}
         </div>
         <button
           onClick={onEdit}
-          className="flex items-center gap-1.5 px-3 py-1 bg-orange-200 text-black font-semibold text-xs rounded hover:bg-orange-100 transition cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1 bg-[var(--color-primary-light)] text-[var(--color-text-dark)] font-semibold text-xs rounded hover:bg-[var(--color-primary-light-hover)] transition cursor-pointer"
         >
           Edit
         </button>
       </div>
 
       {/* Question text */}
-      <div className="text-gray-100 text-base leading-relaxed whitespace-pre-wrap">{question.text}</div>
+      <div className="text-[var(--color-text-primary)] text-base leading-relaxed whitespace-pre-wrap">{question.text}</div>
 
       {/* Attached image */}
       {question.image && (
@@ -46,18 +46,18 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
           <img
             src={question.image}
             alt={`Question ${question.index}`}
-            className="max-h-56 rounded-lg border border-gray-700 object-contain bg-black/30 p-1"
+            className="max-h-56 rounded-lg border border-[var(--color-border)] object-contain bg-black/30 p-1"
           />
         </div>
       )}
 
       {/* NUMERICAL */}
       {isNumerical && (
-        <div className="p-3 bg-orange-950/40 border border-orange-600/50 rounded-xl text-sm flex items-center justify-between">
-          <span className="font-semibold text-orange-300 flex items-center gap-1.5">
+        <div className="p-3 bg-[var(--color-numerical-bg)]/40 border border-[var(--color-numerical-border)]/50 rounded-xl text-sm flex items-center justify-between">
+          <span className="font-semibold text-[var(--color-numerical-text)] flex items-center gap-1.5">
             <Hash size={14} /> Numerical Value Answer:
           </span>
-          <span className="font-mono font-bold text-base bg-orange-900/70 px-3.5 py-1 rounded-lg border border-orange-400/40 text-orange-100 shadow-sm">
+          <span className="font-mono font-bold text-base bg-[var(--color-primary-muted)]/70 px-3.5 py-1 rounded-lg border border-[var(--color-primary-hover)]/40 text-[var(--color-primary-light)] shadow-sm">
             {question.correctAnswer || 'Not set'}
           </span>
         </div>
@@ -65,8 +65,8 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
 
       {/* DESCRIPTIVE */}
       {isDescriptive && (
-        <div className="p-3 bg-amber-950/40 border border-amber-600/50 rounded-xl text-sm">
-          <span className="font-semibold text-amber-300 flex items-center gap-1.5">
+        <div className="p-3 bg-[var(--color-descriptive-bg)]/40 border border-[var(--color-descriptive-border)]/50 rounded-xl text-sm">
+          <span className="font-semibold text-[var(--color-descriptive-text)] flex items-center gap-1.5">
             <FileText size={14} /> AI-Verified — no answer key shown
           </span>
         </div>
@@ -82,12 +82,12 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
                 key={val}
                 className={`flex-1 flex items-center justify-center gap-2 p-2.5 rounded-lg border text-sm font-semibold ${
                   isCorrect
-                    ? 'bg-emerald-950/50 border-emerald-500 text-emerald-200'
-                    : 'bg-gray-900/60 border-gray-700 text-gray-400'
+                    ? 'bg-[var(--color-success-muted)]/50 border-[var(--color-success)] text-[var(--color-text-primary)]'
+                    : 'bg-[var(--color-bg-page)]/60 border-[var(--color-border)] text-[var(--color-text-muted)]'
                 }`}
               >
                 <span>{val}</span>
-                {isCorrect && <Check size={16} className="text-emerald-400" />}
+                {isCorrect && <Check size={16} className="text-[var(--color-success)]" />}
               </div>
             );
           })}
@@ -111,15 +111,15 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
                   key={idx}
                   className={`flex items-start gap-2 p-2.5 rounded-lg border text-sm ${
                     isCorrect
-                      ? 'bg-emerald-950/40 border-emerald-500 text-emerald-200 font-medium'
-                      : 'bg-gray-900/60 border-gray-700 text-gray-300'
+                      ? 'bg-[var(--color-success-muted)]/40 border-[var(--color-success)] text-[var(--color-text-primary)] font-medium'
+                      : 'bg-[var(--color-bg-page)]/60 border-[var(--color-border)] text-[var(--color-text-secondary)]'
                   }`}
                 >
-                  <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${isCorrect ? 'bg-emerald-500 text-black' : 'bg-gray-700 text-gray-300'}`}>
+                  <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${isCorrect ? 'bg-[var(--color-success)] text-[var(--color-text-dark)]' : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]'}`}>
                     {String.fromCharCode(65 + idx)}
                   </span>
                   <span className="flex-1 break-words">{opt}</span>
-                  {isCorrect && <Check size={16} className="text-emerald-400 shrink-0 mt-0.5" />}
+                  {isCorrect && <Check size={16} className="text-[var(--color-success)] shrink-0 mt-0.5" />}
                 </div>
               );
             })}
@@ -128,9 +128,9 @@ export default function QuestionDisplayView({ question, sectionType, onEdit }) {
 
       {/* Correct answer footer */}
       {(isMCQ || isMSQ) && question.correctAnswer && (
-        <div className="text-xs text-gray-400 flex items-center gap-1.5 pt-1 border-t border-gray-700/60">
-          <span className="font-semibold text-gray-300">{isMSQ ? 'Correct Answers:' : 'Correct Answer:'}</span>
-          <span className="text-emerald-300 font-medium">{question.correctAnswer}</span>
+        <div className="text-xs text-[var(--color-text-muted)] flex items-center gap-1.5 pt-1 border-t border-[var(--color-border)]/60">
+          <span className="font-semibold text-[var(--color-text-secondary)]">{isMSQ ? 'Correct Answers:' : 'Correct Answer:'}</span>
+          <span className="text-[var(--color-success)] font-medium">{question.correctAnswer}</span>
         </div>
       )}
     </div>

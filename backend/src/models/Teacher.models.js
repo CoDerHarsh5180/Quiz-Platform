@@ -41,7 +41,7 @@ const teacherSchema = new Schema({
 }, {timestamps:true})
 
 
-teacherSchema.pre("save", async function(next){
+teacherSchema.pre("save", async function(){
     if(!this.isModified("password")) return;
 
     this.password = await bcrypt.hash(this.password,10)

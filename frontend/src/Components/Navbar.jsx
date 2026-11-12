@@ -38,7 +38,7 @@ function Navbar() {
             <div className='text-4xl font-bold p-2'>प्रश्णोत्तर</div>
 
             {/* ── Desktop nav ── */}
-            <div className='text-white hidden gap-2 p-5 md:flex items-center'>
+            <div className='text-[var(--color-text-primary)] hidden gap-2 p-5 md:flex items-center'>
                 <button onClick={() => goTo('/')}>Home</button>
                 <div>|</div>
                 <button onClick={handleTestFormForRegisteredUser}>Create new test</button>
@@ -73,7 +73,7 @@ function Navbar() {
 
             {/* ── Mobile dropdown menu ── */}
             {menuOpen && (
-                <div className='w-full bg-gray-700/30 flex flex-col gap-2 md:hidden absolute top-24 p-5 left-0 rounded backdrop-blur-2xl z-40'>
+                <div className='w-full bg-[var(--color-bg-elevated)]/30 flex flex-col gap-2 md:hidden absolute top-24 p-5 left-0 rounded backdrop-blur-2xl z-40'>
                     <button onClick={() => goTo('/')}>Home</button>
                     <hr />
                     <button onClick={handleTestFormForRegisteredUser}>Create New Test</button>
