@@ -25,7 +25,8 @@ export {app}
 import router        from "./router/userRouter.routes.js"
 import testRouter    from "./router/createQuiz.routes.js"
 import studentRouter from "./router/student-routes/student.routes.js"
-
+import TestttemptRouter from "./router/student-routes/test.routes.js"
 app.use("/api/v1/test/", testRouter)
 app.use("/api/v1/", router)
 app.use("/api/v1/student/", studentRouter)
+app.use("/api/v1/student/test/", TestttemptRouter)

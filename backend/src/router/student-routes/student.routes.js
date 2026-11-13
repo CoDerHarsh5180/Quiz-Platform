@@ -1,5 +1,5 @@
 import { Router }             from 'express';
-import { verifyStudentJWT }  from '../../middleware/studentAuth.middleware.js';
+import { verifyJWTStudent }  from '../../middleware/studAuth.middleware.js';
 import {
   studentRegister,
   studentVerifyOtp,
@@ -19,9 +19,9 @@ router.route('/login').post(studentLogin);
 router.route('/refresh-token').post(studentRefreshToken);
 
 // ── Protected routes ───────────────────────────────────────────────────────────
-router.route('/logout').post(verifyStudentJWT, studentLogout);
-router.route('/profile').get(verifyStudentJWT, studentGetProfile);
-router.route('/change-password').post(verifyStudentJWT, studentChangePassword);
+router.route('/logout').post(verifyJWTStudent, studentLogout);
+router.route('/profile').get(verifyJWTStudent, studentGetProfile);
+router.route('/change-password').post(verifyJWTStudent, studentChangePassword);
 
 export default router;
 

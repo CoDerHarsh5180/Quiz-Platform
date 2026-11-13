@@ -7,6 +7,7 @@ const answerSchema = new Schema({
   sectionId:   { type: Schema.Types.ObjectId, ref: 'Section',  required: true },
   selected:    [String],            // option ids (supports multi-correct)
   numeric:     Number,              // for numerical-type questions
+  ansText:     String,              // for text-type questions
   markedForReview: { type: Boolean, default: false },
   visited:     { type: Boolean, default: false },
 
@@ -23,7 +24,7 @@ const testAttemptSchema = new Schema({
   testVersion: Number,
   attemptNo: { type: Number, default: 1 },
 
-  status: { type: String, enum: ['in_progress', 'submitted', 'auto_submitted'], default: 'in_progress' },
+  status: { type: String, enum: ['in_progress', 'submitted'], default: 'in_progress' },
   startedAt: { type: Date, required: true },
   expiresAt: { type: Date, required: true },     // server-computed
   submittedAt: Date,

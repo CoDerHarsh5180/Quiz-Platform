@@ -114,7 +114,7 @@ const studentLogin = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateTokens(student._id);
   const loggedInStudent = await Student.findById(student._id).select('-password -refreshToken');
-
+  console.log('Logged in student:', loggedInStudent);
   return res
     .status(200)
     .cookie('accessToken',  accessToken,  cookieOptions)
